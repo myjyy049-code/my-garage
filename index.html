@@ -24,424 +24,107 @@
     --danger: #ff4444;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Noto Sans JP', sans-serif;
-    min-height: 100vh;
-  }
+  body { background: var(--bg); color: var(--text); font-family: 'Noto Sans JP', sans-serif; min-height: 100vh; }
 
-  /* ===== LOGIN ===== */
   #login-screen {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
     background: radial-gradient(ellipse at 50% 0%, #1a0a00 0%, #0a0a0a 70%);
     padding: 2rem;
   }
-  .login-logo {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 3.5rem;
-    font-weight: 700;
-    letter-spacing: 0.2em;
-    color: var(--accent);
-    text-shadow: 0 0 40px rgba(255,107,0,0.5);
-    margin-bottom: 0.5rem;
-  }
-  .login-sub {
-    color: var(--text2);
-    font-size: 0.85rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    margin-bottom: 3rem;
-  }
-  .login-club {
-    color: var(--accent);
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 1rem;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    margin-bottom: 3rem;
-    opacity: 0.8;
-  }
-  .login-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-top: 2px solid var(--accent);
-    padding: 2.5rem;
-    width: 100%;
-    max-width: 380px;
-    border-radius: 4px;
-  }
-  .login-card h2 {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 1.3rem;
-    letter-spacing: 0.1em;
-    margin-bottom: 1.5rem;
-    color: var(--text2);
-    text-transform: uppercase;
-  }
-  .google-btn {
-    width: 100%;
-    padding: 0.9rem;
-    background: #fff;
-    color: #333;
-    border: none;
-    border-radius: 4px;
-    font-size: 0.95rem;
-    font-weight: 500;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
-    transition: opacity 0.2s;
-  }
+  .login-logo { font-family: 'Rajdhani', sans-serif; font-size: 3.5rem; font-weight: 700; letter-spacing: 0.2em; color: var(--accent); text-shadow: 0 0 40px rgba(255,107,0,0.5); margin-bottom: 0.5rem; }
+  .login-sub { color: var(--text2); font-size: 0.85rem; letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 0.5rem; }
+  .login-club { color: var(--accent); font-family: 'Rajdhani', sans-serif; font-size: 1rem; letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 3rem; opacity: 0.8; }
+  .login-card { background: var(--surface); border: 1px solid var(--border); border-top: 2px solid var(--accent); padding: 2.5rem; width: 100%; max-width: 380px; border-radius: 4px; }
+  .login-card h2 { font-family: 'Rajdhani', sans-serif; font-size: 1.3rem; letter-spacing: 0.1em; margin-bottom: 1.5rem; color: var(--text2); text-transform: uppercase; }
+  .google-btn { width: 100%; padding: 0.9rem; background: #fff; color: #333; border: none; border-radius: 4px; font-size: 0.95rem; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.75rem; transition: opacity 0.2s; }
   .google-btn:hover { opacity: 0.9; }
-  .google-icon {
-    width: 20px; height: 20px;
-  }
+  .google-icon { width: 20px; height: 20px; }
 
-  /* ===== APP ===== */
   #app-screen { display: none; }
-  .header {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 0 1.5rem;
-    height: 56px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  .header-logo {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--accent);
-    letter-spacing: 0.15em;
-  }
-  .header-user {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
-  .avatar {
-    width: 32px; height: 32px;
-    border-radius: 50%;
-    background: var(--accent);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: #000;
-  }
-  .logout-btn {
-    background: none;
-    border: 1px solid var(--border);
-    color: var(--text2);
-    padding: 0.3rem 0.8rem;
-    border-radius: 3px;
-    font-size: 0.8rem;
-    cursor: pointer;
-    font-family: 'Noto Sans JP', sans-serif;
-    transition: all 0.2s;
-  }
+  .header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 1.5rem; height: 56px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  .header-logo { font-family: 'Rajdhani', sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--accent); letter-spacing: 0.15em; }
+  .header-user { display: flex; align-items: center; gap: 0.75rem; }
+  .avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; color: #000; }
+  .logout-btn { background: none; border: 1px solid var(--border); color: var(--text2); padding: 0.3rem 0.8rem; border-radius: 3px; font-size: 0.8rem; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; transition: all 0.2s; }
   .logout-btn:hover { border-color: var(--accent); color: var(--accent); }
 
   .main { padding: 1.5rem; max-width: 900px; margin: 0 auto; }
 
-  /* ===== BIKE CARD ===== */
-  .bike-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--accent);
-    border-radius: 4px;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-  }
-  .bike-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 1rem;
-  }
-  .bike-name {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--accent);
-    letter-spacing: 0.05em;
-  }
-  .bike-meta { color: var(--text2); font-size: 0.85rem; margin-top: 0.2rem; }
-  .edit-btn {
-    background: none;
-    border: 1px solid var(--border);
-    color: var(--text2);
-    padding: 0.4rem 0.9rem;
-    border-radius: 3px;
-    font-size: 0.8rem;
-    cursor: pointer;
-    font-family: 'Noto Sans JP', sans-serif;
+  /* バイク一覧 */
+  .bike-list { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.5rem; }
+  .bike-list-item {
+    background: var(--surface); border: 1px solid var(--border);
+    border-left: 3px solid var(--border); border-radius: 4px;
+    padding: 1rem 1.25rem; cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center;
     transition: all 0.2s;
   }
-  .edit-btn:hover { border-color: var(--accent); color: var(--accent); }
-  .bike-specs {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 1rem;
-  }
-  .spec-item label {
-    display: block;
-    font-size: 0.7rem;
-    color: var(--text2);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 0.25rem;
-  }
-  .spec-item span {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 1.2rem;
-    font-weight: 600;
-  }
-  .no-bike {
-    text-align: center;
-    padding: 3rem;
-    color: var(--text2);
-  }
-  .register-btn {
-    background: var(--accent);
-    color: #000;
-    border: none;
-    padding: 0.8rem 2rem;
-    border-radius: 3px;
-    font-size: 0.95rem;
-    font-weight: 700;
-    cursor: pointer;
-    font-family: 'Noto Sans JP', sans-serif;
-    margin-top: 1rem;
-    transition: opacity 0.2s;
-  }
-  .register-btn:hover { opacity: 0.85; }
+  .bike-list-item:hover { border-left-color: var(--accent); }
+  .bike-list-item.active { border-left-color: var(--accent); background: var(--surface2); }
+  .bike-list-name { font-family: 'Rajdhani', sans-serif; font-size: 1.3rem; font-weight: 700; color: var(--accent); }
+  .bike-list-meta { font-size: 0.8rem; color: var(--text2); margin-top: 0.2rem; }
+  .bike-list-actions { display: flex; gap: 0.5rem; }
 
-  /* ===== TABS ===== */
-  .tabs {
-    display: flex;
-    gap: 0;
-    margin-bottom: 1.5rem;
-    border-bottom: 1px solid var(--border);
-  }
-  .tab {
-    padding: 0.75rem 1.25rem;
-    background: none;
-    border: none;
-    color: var(--text2);
-    font-size: 0.9rem;
-    cursor: pointer;
-    font-family: 'Noto Sans JP', sans-serif;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -1px;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
+  .bike-card { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 4px; padding: 1.5rem; margin-bottom: 1.5rem; }
+  .bike-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
+  .bike-name { font-family: 'Rajdhani', sans-serif; font-size: 1.8rem; font-weight: 700; color: var(--accent); letter-spacing: 0.05em; }
+  .bike-meta { color: var(--text2); font-size: 0.85rem; margin-top: 0.2rem; }
+  .edit-btn { background: none; border: 1px solid var(--border); color: var(--text2); padding: 0.4rem 0.9rem; border-radius: 3px; font-size: 0.8rem; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; transition: all 0.2s; }
+  .edit-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .bike-specs { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; }
+  .spec-item label { display: block; font-size: 0.7rem; color: var(--text2); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.25rem; }
+  .spec-item span { font-family: 'Rajdhani', sans-serif; font-size: 1.2rem; font-weight: 600; }
+
+  .no-bike { text-align: center; padding: 3rem; color: var(--text2); }
+  .register-btn { background: var(--accent); color: #000; border: none; padding: 0.8rem 2rem; border-radius: 3px; font-size: 0.95rem; font-weight: 700; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; margin-top: 1rem; transition: opacity 0.2s; }
+  .register-btn:hover { opacity: 0.85; }
+  .add-bike-btn { background: none; border: 1px dashed var(--border); color: var(--text2); padding: 0.8rem; border-radius: 4px; font-size: 0.85rem; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; width: 100%; text-align: center; transition: all 0.2s; margin-bottom: 1.5rem; }
+  .add-bike-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .tabs { display: flex; gap: 0; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+  .tab { padding: 0.75rem 1.25rem; background: none; border: none; color: var(--text2); font-size: 0.9rem; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.2s; display: flex; align-items: center; gap: 0.5rem; }
   .tab:hover { color: var(--text); }
   .tab.active { color: var(--text); border-bottom-color: var(--accent); }
-  .tab-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-  }
+  .tab-dot { width: 8px; height: 8px; border-radius: 50%; }
   .tab-dot.engine { background: var(--engine); }
   .tab-dot.drive { background: var(--drive); }
   .tab-dot.electric { background: var(--electric); }
 
-  /* ===== RECORDS ===== */
-  .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-  }
-  .section-title {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 1.1rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text2);
-  }
-  .add-btn {
-    background: var(--accent);
-    color: #000;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 3px;
-    font-size: 0.85rem;
-    font-weight: 700;
-    cursor: pointer;
-    font-family: 'Noto Sans JP', sans-serif;
-    transition: opacity 0.2s;
-  }
+  .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+  .section-title { font-family: 'Rajdhani', sans-serif; font-size: 1.1rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text2); }
+  .add-btn { background: var(--accent); color: #000; border: none; padding: 0.5rem 1rem; border-radius: 3px; font-size: 0.85rem; font-weight: 700; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; transition: opacity 0.2s; }
   .add-btn:hover { opacity: 0.85; }
 
   .record-list { display: flex; flex-direction: column; gap: 0.75rem; }
-  .record-item {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 1rem 1.25rem;
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 0.5rem;
-    align-items: start;
-  }
+  .record-item { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 1rem 1.25rem; display: grid; grid-template-columns: 1fr auto; gap: 0.5rem; align-items: start; }
   .record-title { font-weight: 500; font-size: 0.95rem; }
-  .record-meta {
-    font-size: 0.8rem;
-    color: var(--text2);
-    margin-top: 0.25rem;
-    display: flex;
-    gap: 1rem;
-  }
-  .record-date {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.9rem;
-    color: var(--text2);
-    text-align: right;
-  }
-  .record-km {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.85rem;
-    color: var(--accent);
-    text-align: right;
-  }
-  .delete-btn {
-    background: none;
-    border: none;
-    color: var(--text2);
-    cursor: pointer;
-    font-size: 1rem;
-    padding: 0.2rem;
-    transition: color 0.2s;
-    align-self: center;
-    margin-left: 0.5rem;
-  }
+  .record-meta { font-size: 0.8rem; color: var(--text2); margin-top: 0.25rem; display: flex; gap: 1rem; }
+  .record-date { font-family: 'Rajdhani', sans-serif; font-size: 0.9rem; color: var(--text2); text-align: right; }
+  .delete-btn { background: none; border: none; color: var(--text2); cursor: pointer; font-size: 1rem; padding: 0.2rem; transition: color 0.2s; align-self: center; margin-left: 0.5rem; }
   .delete-btn:hover { color: var(--danger); }
-  .empty-msg {
-    text-align: center;
-    padding: 2rem;
-    color: var(--text2);
-    font-size: 0.9rem;
-    border: 1px dashed var(--border);
-    border-radius: 4px;
-  }
+  .empty-msg { text-align: center; padding: 2rem; color: var(--text2); font-size: 0.9rem; border: 1px dashed var(--border); border-radius: 4px; }
 
-  /* ===== MODAL ===== */
-  .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.8);
-    z-index: 200;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
-  }
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 200; align-items: center; justify-content: center; padding: 1rem; }
   .modal-overlay.open { display: flex; }
-  .modal {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-top: 2px solid var(--accent);
-    border-radius: 4px;
-    padding: 2rem;
-    width: 100%;
-    max-width: 480px;
-    max-height: 90vh;
-    overflow-y: auto;
-  }
-  .modal h3 {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 1.3rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-bottom: 1.5rem;
-  }
+  .modal { background: var(--surface); border: 1px solid var(--border); border-top: 2px solid var(--accent); border-radius: 4px; padding: 2rem; width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; }
+  .modal h3 { font-family: 'Rajdhani', sans-serif; font-size: 1.3rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1.5rem; }
   .form-group { margin-bottom: 1.2rem; }
-  .form-group label {
-    display: block;
-    font-size: 0.8rem;
-    color: var(--text2);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 0.4rem;
-  }
-  .form-group input,
-  .form-group select,
-  .form-group textarea {
-    width: 100%;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 0.7rem 0.9rem;
-    border-radius: 3px;
-    font-size: 0.9rem;
-    font-family: 'Noto Sans JP', sans-serif;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-  .form-group input:focus,
-  .form-group select:focus,
-  .form-group textarea:focus { border-color: var(--accent); }
+  .form-group label { display: block; font-size: 0.8rem; color: var(--text2); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.4rem; }
+  .form-group input, .form-group select, .form-group textarea { width: 100%; background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 0.7rem 0.9rem; border-radius: 3px; font-size: 0.9rem; font-family: 'Noto Sans JP', sans-serif; outline: none; transition: border-color 0.2s; }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--accent); }
   .form-group select option { background: var(--surface2); }
   .form-group textarea { resize: vertical; min-height: 80px; }
-  .modal-btns {
-    display: flex;
-    gap: 0.75rem;
-    margin-top: 1.5rem;
-    justify-content: flex-end;
-  }
-  .btn-cancel {
-    background: none;
-    border: 1px solid var(--border);
-    color: var(--text2);
-    padding: 0.6rem 1.2rem;
-    border-radius: 3px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    font-family: 'Noto Sans JP', sans-serif;
-  }
-  .btn-save {
-    background: var(--accent);
-    color: #000;
-    border: none;
-    padding: 0.6rem 1.5rem;
-    border-radius: 3px;
-    font-size: 0.9rem;
-    font-weight: 700;
-    cursor: pointer;
-    font-family: 'Noto Sans JP', sans-serif;
-    transition: opacity 0.2s;
-  }
+  .modal-btns { display: flex; gap: 0.75rem; margin-top: 1.5rem; justify-content: flex-end; }
+  .btn-cancel { background: none; border: 1px solid var(--border); color: var(--text2); padding: 0.6rem 1.2rem; border-radius: 3px; font-size: 0.9rem; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; }
+  .btn-save { background: var(--accent); color: #000; border: none; padding: 0.6rem 1.5rem; border-radius: 3px; font-size: 0.9rem; font-weight: 700; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; transition: opacity 0.2s; }
   .btn-save:hover { opacity: 0.85; }
+  .btn-danger { background: var(--danger); color: #fff; border: none; padding: 0.6rem 1.2rem; border-radius: 3px; font-size: 0.9rem; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; }
 
-  /* ===== LOADING ===== */
-  .loading {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 1.5rem;
-    color: var(--accent);
-    letter-spacing: 0.2em;
-  }
+  .loading { display: flex; align-items: center; justify-content: center; min-height: 100vh; font-family: 'Rajdhani', sans-serif; font-size: 1.5rem; color: var(--accent); letter-spacing: 0.2em; }
+  .back-btn { background: none; border: none; color: var(--text2); cursor: pointer; font-size: 0.85rem; font-family: 'Noto Sans JP', sans-serif; padding: 0.5rem 0; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; transition: color 0.2s; }
+  .back-btn:hover { color: var(--accent); }
 
-  /* ===== RESPONSIVE ===== */
   @media (max-width: 600px) {
     .main { padding: 1rem; }
     .tab { padding: 0.6rem 0.9rem; font-size: 0.82rem; }
@@ -452,6 +135,7 @@
 <body>
 
 <div class="loading" id="loading">LOADING...</div>
+
 <div id="login-screen" style="display:none">
   <div class="login-logo">MY GARAGE</div>
   <div class="login-sub">バイクメンテナンス管理</div>
@@ -482,27 +166,28 @@
     </div>
   </div>
   <div class="main">
-    <!-- バイク情報 -->
-    <div id="bike-section"></div>
+    <!-- バイク一覧画面 -->
+    <div id="bike-list-section">
+      <div id="bike-list"></div>
+      <button class="add-bike-btn" onclick="openBikeModal()">＋ バイクを追加</button>
+    </div>
 
-    <!-- メンテ記録 -->
-    <div id="records-section" style="display:none">
-      <div class="tabs">
-        <button class="tab active" onclick="switchTab('engine', this)">
-          <span class="tab-dot engine"></span>エンジン系
-        </button>
-        <button class="tab" onclick="switchTab('drive', this)">
-          <span class="tab-dot drive"></span>駆動系
-        </button>
-        <button class="tab" onclick="switchTab('electric', this)">
-          <span class="tab-dot electric"></span>電気系
-        </button>
+    <!-- バイク詳細＆メンテ記録画面 -->
+    <div id="bike-detail-section" style="display:none">
+      <button class="back-btn" onclick="showBikeList()">← バイク一覧に戻る</button>
+      <div id="bike-detail-card"></div>
+      <div id="records-section">
+        <div class="tabs">
+          <button class="tab active" onclick="switchTab('engine', this)"><span class="tab-dot engine"></span>エンジン系</button>
+          <button class="tab" onclick="switchTab('drive', this)"><span class="tab-dot drive"></span>駆動系</button>
+          <button class="tab" onclick="switchTab('electric', this)"><span class="tab-dot electric"></span>電気系</button>
+        </div>
+        <div class="section-header">
+          <div class="section-title" id="current-category-label">エンジン系</div>
+          <button class="add-btn" onclick="openAddRecord()">＋ 記録追加</button>
+        </div>
+        <div class="record-list" id="record-list"></div>
       </div>
-      <div class="section-header">
-        <div class="section-title" id="current-category-label">エンジン系</div>
-        <button class="add-btn" onclick="openAddRecord()">＋ 記録追加</button>
-      </div>
-      <div class="record-list" id="record-list"></div>
     </div>
   </div>
 </div>
@@ -511,28 +196,14 @@
 <div class="modal-overlay" id="bike-modal">
   <div class="modal">
     <h3 id="bike-modal-title">バイク登録</h3>
-    <div class="form-group">
-      <label>車種・車名</label>
-      <input type="text" id="bike-name" placeholder="例：Honda CB400SF">
-    </div>
-    <div class="form-group">
-      <label>年式</label>
-      <input type="number" id="bike-year" placeholder="例：2020">
-    </div>
-    <div class="form-group">
-      <label>排気量 (cc)</label>
-      <input type="number" id="bike-cc" placeholder="例：400">
-    </div>
-    <div class="form-group">
-      <label>現在の走行距離 (km)</label>
-      <input type="number" id="bike-km" placeholder="例：12500">
-    </div>
-    <div class="form-group">
-      <label>メモ</label>
-      <textarea id="bike-memo" placeholder="カスタム内容など自由に"></textarea>
-    </div>
+    <div class="form-group"><label>車種・車名</label><input type="text" id="bike-name" placeholder="例：Honda CB400SF"></div>
+    <div class="form-group"><label>年式</label><input type="number" id="bike-year" placeholder="例：2020"></div>
+    <div class="form-group"><label>排気量 (cc)</label><input type="number" id="bike-cc" placeholder="例：400"></div>
+    <div class="form-group"><label>現在の走行距離 (km)</label><input type="number" id="bike-km" placeholder="例：12500"></div>
+    <div class="form-group"><label>メモ</label><textarea id="bike-memo" placeholder="カスタム内容など自由に"></textarea></div>
     <div class="modal-btns">
       <button class="btn-cancel" onclick="closeBikeModal()">キャンセル</button>
+      <button class="btn-danger" id="bike-delete-btn" onclick="deleteBike()" style="display:none">削除</button>
       <button class="btn-save" onclick="saveBike()">保存</button>
     </div>
   </div>
@@ -542,34 +213,18 @@
 <div class="modal-overlay" id="record-modal">
   <div class="modal">
     <h3>メンテ記録を追加</h3>
-    <div class="form-group">
-      <label>カテゴリ</label>
+    <div class="form-group"><label>カテゴリ</label>
       <select id="record-category">
         <option value="engine">エンジン系</option>
         <option value="drive">駆動系</option>
         <option value="electric">電気系</option>
       </select>
     </div>
-    <div class="form-group">
-      <label>作業内容</label>
-      <input type="text" id="record-title" placeholder="例：エンジンオイル交換">
-    </div>
-    <div class="form-group">
-      <label>実施日</label>
-      <input type="date" id="record-date">
-    </div>
-    <div class="form-group">
-      <label>走行距離 (km)</label>
-      <input type="number" id="record-km" placeholder="例：12500">
-    </div>
-    <div class="form-group">
-      <label>次回予定距離 (km) ※任意</label>
-      <input type="number" id="record-next-km" placeholder="例：15500">
-    </div>
-    <div class="form-group">
-      <label>メモ</label>
-      <textarea id="record-memo" placeholder="使用したパーツ、費用など"></textarea>
-    </div>
+    <div class="form-group"><label>作業内容</label><input type="text" id="record-title" placeholder="例：エンジンオイル交換"></div>
+    <div class="form-group"><label>実施日</label><input type="date" id="record-date"></div>
+    <div class="form-group"><label>走行距離 (km)</label><input type="number" id="record-km" placeholder="例：12500"></div>
+    <div class="form-group"><label>次回予定距離 (km) ※任意</label><input type="number" id="record-next-km" placeholder="例：15500"></div>
+    <div class="form-group"><label>メモ</label><textarea id="record-memo" placeholder="使用したパーツ、費用など"></textarea></div>
     <div class="modal-btns">
       <button class="btn-cancel" onclick="closeRecordModal()">キャンセル</button>
       <button class="btn-save" onclick="saveRecord()">保存</button>
@@ -578,7 +233,6 @@
 </div>
 
 <script>
-// ===== SUPABASE設定 =====
 const SUPABASE_URL = 'https://owgoceocaeututmtecsz.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_BRnWD14z9rBwpwmAaj-FZw_WiccwQiC';
 const { createClient } = supabase;
@@ -586,23 +240,15 @@ const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let currentUser = null;
 let currentTab = 'engine';
-let bikeData = null;
+let bikesData = [];
+let selectedBike = null;
 
-const categoryLabels = {
-  engine: 'エンジン系',
-  drive: '駆動系',
-  electric: '電気系'
-};
+const categoryLabels = { engine: 'エンジン系', drive: '駆動系', electric: '電気系' };
 
-// ===== 初期化 =====
 async function init() {
   const { data: { session } } = await sb.auth.getSession();
-  if (session) {
-    currentUser = session.user;
-    showApp();
-  } else {
-    showLogin();
-  }
+  if (session) { currentUser = session.user; showApp(); }
+  else { showLogin(); }
   sb.auth.onAuthStateChange((event, session) => {
     if (session) { currentUser = session.user; showApp(); }
     else { currentUser = null; showLogin(); }
@@ -621,78 +267,90 @@ async function showApp() {
   document.getElementById('app-screen').style.display = 'block';
   const name = currentUser.user_metadata?.full_name || currentUser.email || 'U';
   document.getElementById('user-avatar').textContent = name.charAt(0).toUpperCase();
-  await loadBike();
+  await loadBikes();
 }
 
-// ===== 認証 =====
 async function loginWithGoogle() {
-  await sb.auth.signInWithOAuth({
-    provider: 'google',
-    options: { redirectTo: window.location.href }
-  });
+  await sb.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.href } });
 }
 
-async function logout() {
-  await sb.auth.signOut();
+async function logout() { await sb.auth.signOut(); }
+
+// ===== バイク一覧 =====
+async function loadBikes() {
+  const { data } = await sb.from('bikes').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: true });
+  bikesData = data || [];
+  renderBikeList();
 }
 
-// ===== バイク =====
-async function loadBike() {
-  const { data } = await sb.from('bikes').select('*').eq('user_id', currentUser.id).single();
-  bikeData = data;
-  renderBike();
-}
-
-function renderBike() {
-  const section = document.getElementById('bike-section');
-  if (!bikeData) {
-    section.innerHTML = `
-      <div class="bike-card">
-        <div class="no-bike">
-          <div style="font-size:2rem;margin-bottom:0.5rem"> ?</div>
-          <div>バイク情報がまだ登録されていません</div>
-          <button class="register-btn" onclick="openBikeModal()">バイクを登録する</button>
-        </div>
-      </div>`;
-    document.getElementById('records-section').style.display = 'none';
+function renderBikeList() {
+  const list = document.getElementById('bike-list');
+  if (bikesData.length === 0) {
+    list.innerHTML = `<div class="no-bike"><div style="font-size:2rem;margin-bottom:0.5rem">🏍️</div><div>バイクがまだ登録されていません</div></div>`;
     return;
   }
-  section.innerHTML = `
+  list.innerHTML = bikesData.map(bike => `
+    <div class="bike-list-item" onclick="selectBike('${bike.id}')">
+      <div>
+        <div class="bike-list-name">${bike.name}</div>
+        <div class="bike-list-meta">${bike.year || ''}年式　${bike.cc ? bike.cc + 'cc' : ''}　${bike.km ? bike.km.toLocaleString() + 'km' : ''}</div>
+      </div>
+      <div style="color:var(--text2);font-size:1.2rem;">›</div>
+    </div>`).join('');
+}
+
+function selectBike(bikeId) {
+  selectedBike = bikesData.find(b => b.id === bikeId);
+  document.getElementById('bike-list-section').style.display = 'none';
+  document.getElementById('bike-detail-section').style.display = 'block';
+  renderBikeDetail();
+  currentTab = 'engine';
+  document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === 0));
+  document.getElementById('current-category-label').textContent = 'エンジン系';
+  loadRecords();
+}
+
+function showBikeList() {
+  selectedBike = null;
+  document.getElementById('bike-detail-section').style.display = 'none';
+  document.getElementById('bike-list-section').style.display = 'block';
+  loadBikes();
+}
+
+function renderBikeDetail() {
+  document.getElementById('bike-detail-card').innerHTML = `
     <div class="bike-card">
       <div class="bike-card-header">
         <div>
-          <div class="bike-name">${bikeData.name}</div>
-          <div class="bike-meta">${bikeData.year || ''}年式</div>
+          <div class="bike-name">${selectedBike.name}</div>
+          <div class="bike-meta">${selectedBike.year || ''}年式</div>
         </div>
         <button class="edit-btn" onclick="openBikeModal(true)">編集</button>
       </div>
       <div class="bike-specs">
-        <div class="spec-item"><label>排気量</label><span>${bikeData.cc || '-'} cc</span></div>
-        <div class="spec-item"><label>走行距離</label><span>${bikeData.km ? bikeData.km.toLocaleString() : '-'} km</span></div>
-        ${bikeData.memo ? `<div class="spec-item" style="grid-column:1/-1"><label>メモ</label><span style="font-family:inherit;font-size:0.9rem">${bikeData.memo}</span></div>` : ''}
+        <div class="spec-item"><label>排気量</label><span>${selectedBike.cc || '-'} cc</span></div>
+        <div class="spec-item"><label>走行距離</label><span>${selectedBike.km ? selectedBike.km.toLocaleString() : '-'} km</span></div>
+        ${selectedBike.memo ? `<div class="spec-item" style="grid-column:1/-1"><label>メモ</label><span style="font-family:inherit;font-size:0.9rem">${selectedBike.memo}</span></div>` : ''}
       </div>
     </div>`;
-  document.getElementById('records-section').style.display = 'block';
-  loadRecords();
 }
 
 function openBikeModal(isEdit = false) {
-  document.getElementById('bike-modal-title').textContent = isEdit ? 'バイク情報を編集' : 'バイクを登録';
-  if (isEdit && bikeData) {
-    document.getElementById('bike-name').value = bikeData.name || '';
-    document.getElementById('bike-year').value = bikeData.year || '';
-    document.getElementById('bike-cc').value = bikeData.cc || '';
-    document.getElementById('bike-km').value = bikeData.km || '';
-    document.getElementById('bike-memo').value = bikeData.memo || '';
+  document.getElementById('bike-modal-title').textContent = isEdit ? 'バイク情報を編集' : 'バイクを追加';
+  document.getElementById('bike-delete-btn').style.display = isEdit ? 'block' : 'none';
+  if (isEdit && selectedBike) {
+    document.getElementById('bike-name').value = selectedBike.name || '';
+    document.getElementById('bike-year').value = selectedBike.year || '';
+    document.getElementById('bike-cc').value = selectedBike.cc || '';
+    document.getElementById('bike-km').value = selectedBike.km || '';
+    document.getElementById('bike-memo').value = selectedBike.memo || '';
   } else {
     ['bike-name','bike-year','bike-cc','bike-km','bike-memo'].forEach(id => document.getElementById(id).value = '');
   }
   document.getElementById('bike-modal').classList.add('open');
 }
 
-function closeBikeModal() {
-  document.getElementById('bike-modal').classList.remove('open');
-}
+function closeBikeModal() { document.getElementById('bike-modal').classList.remove('open'); }
 
 async function saveBike() {
   const payload = {
@@ -703,13 +361,24 @@ async function saveBike() {
     km: parseInt(document.getElementById('bike-km').value) || null,
     memo: document.getElementById('bike-memo').value
   };
-  if (bikeData) {
-    await sb.from('bikes').update(payload).eq('id', bikeData.id);
+  if (selectedBike && document.getElementById('bike-modal-title').textContent === 'バイク情報を編集') {
+    await sb.from('bikes').update(payload).eq('id', selectedBike.id);
+    selectedBike = { ...selectedBike, ...payload };
+    closeBikeModal();
+    renderBikeDetail();
   } else {
     await sb.from('bikes').insert(payload);
+    closeBikeModal();
+    await loadBikes();
   }
+}
+
+async function deleteBike() {
+  if (!confirm(`「${selectedBike.name}」を削除しますか？メンテ記録も全て削除されます。`)) return;
+  await sb.from('maintenance_records').delete().eq('bike_id', selectedBike.id);
+  await sb.from('bikes').delete().eq('id', selectedBike.id);
   closeBikeModal();
-  await loadBike();
+  showBikeList();
 }
 
 // ===== メンテ記録 =====
@@ -725,6 +394,7 @@ async function loadRecords() {
   const { data } = await sb.from('maintenance_records')
     .select('*')
     .eq('user_id', currentUser.id)
+    .eq('bike_id', selectedBike.id)
     .eq('category', currentTab)
     .order('date', { ascending: false });
   renderRecords(data || []);
@@ -741,14 +411,14 @@ function renderRecords(records) {
       <div>
         <div class="record-title">${r.title}</div>
         <div class="record-meta">
-          ${r.km ? `<span>  ${r.km.toLocaleString()} km</span>` : ''}
-          ${r.next_km ? `<span>  次回: ${r.next_km.toLocaleString()} km</span>` : ''}
-          ${r.memo ? `<span>  ${r.memo}</span>` : ''}
+          ${r.km ? `<span>📍 ${r.km.toLocaleString()} km</span>` : ''}
+          ${r.next_km ? `<span>🔜 次回: ${r.next_km.toLocaleString()} km</span>` : ''}
+          ${r.memo ? `<span>📝 ${r.memo}</span>` : ''}
         </div>
       </div>
       <div>
         <div class="record-date">${r.date || ''}</div>
-        <button class="delete-btn" onclick="deleteRecord('${r.id}')"> </button>
+        <button class="delete-btn" onclick="deleteRecord('${r.id}')">🗑</button>
       </div>
     </div>`).join('');
 }
@@ -760,13 +430,12 @@ function openAddRecord() {
   document.getElementById('record-modal').classList.add('open');
 }
 
-function closeRecordModal() {
-  document.getElementById('record-modal').classList.remove('open');
-}
+function closeRecordModal() { document.getElementById('record-modal').classList.remove('open'); }
 
 async function saveRecord() {
   const payload = {
     user_id: currentUser.id,
+    bike_id: selectedBike.id,
     category: document.getElementById('record-category').value,
     title: document.getElementById('record-title').value,
     date: document.getElementById('record-date').value,
