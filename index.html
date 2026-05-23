@@ -25,6 +25,7 @@
     --engine: #ff4444;
     --drive: #44aaff;
     --electric: #ffdd00;
+    --fuel: #00ff88;
     --success: #44ff88;
     --danger: #ff4444;
   }
@@ -86,6 +87,9 @@
   .register-btn:hover { opacity: 0.85; }
   .add-bike-btn { background: none; border: 1px dashed var(--border); color: var(--text2); padding: 0.8rem; border-radius: 4px; font-size: 0.85rem; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; width: 100%; text-align: center; transition: all 0.2s; margin-bottom: 1.5rem; }
   .add-bike-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .sort-control { margin-bottom: 1rem; }
+  .sort-control select { background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 0.6rem 0.9rem; border-radius: 3px; font-size: 0.85rem; font-family: 'Noto Sans JP', sans-serif; outline: none; transition: border-color 0.2s; width: 100%; max-width: 300px; }
+  .sort-control select:focus { border-color: var(--accent); }
 
   .tabs { display: flex; gap: 0; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
   .tab { padding: 0.75rem 1.25rem; background: none; border: none; color: var(--text2); font-size: 0.9rem; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.2s; display: flex; align-items: center; gap: 0.5rem; }
@@ -95,6 +99,7 @@
   .tab-dot.engine { background: var(--engine); }
   .tab-dot.drive { background: var(--drive); }
   .tab-dot.electric { background: var(--electric); }
+  .tab-dot.fuel { background: var(--fuel); }
 
   .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
   .section-title { font-family: 'Rajdhani', sans-serif; font-size: 1.1rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text2); }
@@ -173,6 +178,16 @@
   <div class="main">
     <!-- バイク一覧画面 -->
     <div id="bike-list-section">
+      <div class="sort-control">
+        <select id="bike-sort" onchange="sortBikes()">
+          <option value="date-desc">登録日（新しい順）</option>
+          <option value="date-asc">登録日（古い順）</option>
+          <option value="name-asc">車名（あいうえお順）</option>
+          <option value="name-desc">車名（逆順）</option>
+          <option value="year-desc">年式（新しい順）</option>
+          <option value="year-asc">年式（古い順）</option>
+        </select>
+      </div>
       <div id="bike-list"></div>
       <button class="add-bike-btn" onclick="openBikeModal()">＋ バイクを追加</button>
     </div>
@@ -186,6 +201,7 @@
           <button class="tab active" onclick="switchTab('engine', this)"><span class="tab-dot engine"></span>エンジン系</button>
           <button class="tab" onclick="switchTab('drive', this)"><span class="tab-dot drive"></span>駆動系</button>
           <button class="tab" onclick="switchTab('electric', this)"><span class="tab-dot electric"></span>電気系</button>
+          <button class="tab" onclick="switchTab('fuel', this)"><span class="tab-dot fuel"></span>燃費計算</button>
         </div>
         <div class="section-header">
           <div class="section-title" id="current-category-label">エンジン系</div>
@@ -219,16 +235,29 @@
   <div class="modal">
     <h3>メンテ記録を追加</h3>
     <div class="form-group"><label>カテゴリ</label>
-      <select id="record-category">
+      <select id="record-category" onchange="toggleFuelFields()">
         <option value="engine">エンジン系</option>
         <option value="drive">駆動系</option>
         <option value="electric">電気系</option>
+        <option value="fuel">燃費計算</option>
       </select>
     </div>
     <div class="form-group"><label>作業内容</label><input type="text" id="record-title" placeholder="例：エンジンオイル交換"></div>
     <div class="form-group"><label>実施日</label><input type="date" id="record-date"></div>
-    <div class="form-group"><label>走行距離 (km)</label><input type="number" id="record-km" placeholder="例：12500"></div>
-    <div class="form-group"><label>次回予定距離 (km) ※任意</label><input type="number" id="record-next-km" placeholder="例：15500"></div>
+    
+    <!-- 燃費計算専用フィールド -->
+    <div id="fuel-fields" style="display:none;">
+      <div class="form-group"><label>走行前距離 (km)</label><input type="number" id="record-km-before" placeholder="例：12000"></div>
+      <div class="form-group"><label>走行後距離 (km)</label><input type="number" id="record-km-after" placeholder="例：12500"></div>
+      <div class="form-group"><label>給油量 (L)</label><input type="number" step="0.1" id="record-fuel-amount" placeholder="例：15.5"></div>
+    </div>
+    
+    <!-- 通常フィールド -->
+    <div id="normal-fields">
+      <div class="form-group"><label>走行距離 (km)</label><input type="number" id="record-km" placeholder="例：12500"></div>
+      <div class="form-group"><label>次回予定距離 (km) ※任意</label><input type="number" id="record-next-km" placeholder="例：15500"></div>
+    </div>
+    
     <div class="form-group"><label>メモ</label><textarea id="record-memo" placeholder="使用したパーツ、費用など"></textarea></div>
     <div class="modal-btns">
       <button class="btn-cancel" onclick="closeRecordModal()">キャンセル</button>
@@ -248,7 +277,7 @@ let currentTab = 'engine';
 let bikesData = [];
 let selectedBike = null;
 
-const categoryLabels = { engine: 'エンジン系', drive: '駆動系', electric: '電気系' };
+const categoryLabels = { engine: 'エンジン系', drive: '駆動系', electric: '電気系', fuel: '燃費計算' };
 
 async function init() {
   const { data: { session } } = await sb.auth.getSession();
@@ -285,6 +314,35 @@ async function logout() { await sb.auth.signOut(); }
 async function loadBikes() {
   const { data } = await sb.from('bikes').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: true });
   bikesData = data || [];
+  sortBikes();
+}
+
+function sortBikes() {
+  const sortType = document.getElementById('bike-sort')?.value || 'date-desc';
+  const sorted = [...bikesData];
+  
+  switch(sortType) {
+    case 'date-desc':
+      sorted.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+      break;
+    case 'date-asc':
+      sorted.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+      break;
+    case 'name-asc':
+      sorted.sort((a, b) => (a.name || '').localeCompare(b.name || '', 'ja'));
+      break;
+    case 'name-desc':
+      sorted.sort((a, b) => (b.name || '').localeCompare(a.name || '', 'ja'));
+      break;
+    case 'year-desc':
+      sorted.sort((a, b) => (b.year || 0) - (a.year || 0));
+      break;
+    case 'year-asc':
+      sorted.sort((a, b) => (a.year || 0) - (b.year || 0));
+      break;
+  }
+  
+  bikesData = sorted;
   renderBikeList();
 }
 
@@ -431,29 +489,58 @@ function renderRecords(records) {
 function openAddRecord() {
   document.getElementById('record-category').value = currentTab;
   document.getElementById('record-date').value = new Date().toISOString().split('T')[0];
-  ['record-title','record-km','record-next-km','record-memo'].forEach(id => document.getElementById(id).value = '');
+  ['record-title','record-km','record-next-km','record-memo','record-km-before','record-km-after','record-fuel-amount'].forEach(id => document.getElementById(id).value = '');
+  toggleFuelFields();
   document.getElementById('record-modal').classList.add('open');
+}
+
+function toggleFuelFields() {
+  const category = document.getElementById('record-category').value;
+  const isFuel = category === 'fuel';
+  document.getElementById('fuel-fields').style.display = isFuel ? 'block' : 'none';
+  document.getElementById('normal-fields').style.display = isFuel ? 'none' : 'block';
 }
 
 function closeRecordModal() { document.getElementById('record-modal').classList.remove('open'); }
 
 async function saveRecord() {
+  const category = document.getElementById('record-category').value;
+  let memo = document.getElementById('record-memo').value;
+  let km = null;
+  
+  // 燃費計算の場合
+  if (category === 'fuel') {
+    const kmBefore = parseFloat(document.getElementById('record-km-before').value);
+    const kmAfter = parseFloat(document.getElementById('record-km-after').value);
+    const fuelAmount = parseFloat(document.getElementById('record-fuel-amount').value);
+    
+    if (kmBefore && kmAfter && fuelAmount) {
+      const distance = kmAfter - kmBefore;
+      const fuelEconomy = (distance / fuelAmount).toFixed(2);
+      memo = `燃費: ${fuelEconomy} km/L\n走行距離: ${distance} km\n給油量: ${fuelAmount} L\n${memo ? '\n' + memo : ''}`;
+      km = kmAfter;
+    }
+  } else {
+    km = parseInt(document.getElementById('record-km').value) || null;
+  }
+  
   const payload = {
     user_id: currentUser.id,
     bike_id: selectedBike.id,
-    category: document.getElementById('record-category').value,
+    category: category,
     title: document.getElementById('record-title').value,
     date: document.getElementById('record-date').value,
-    km: parseInt(document.getElementById('record-km').value) || null,
-    next_km: parseInt(document.getElementById('record-next-km').value) || null,
-    memo: document.getElementById('record-memo').value
+    km: km,
+    next_km: category === 'fuel' ? null : (parseInt(document.getElementById('record-next-km').value) || null),
+    memo: memo
   };
+  
   await sb.from('maintenance_records').insert(payload);
   closeRecordModal();
   currentTab = payload.category;
   document.getElementById('current-category-label').textContent = categoryLabels[currentTab];
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab')[['engine','drive','electric'].indexOf(currentTab)].classList.add('active');
+  document.querySelectorAll('.tab')[['engine','drive','electric','fuel'].indexOf(currentTab)].classList.add('active');
   loadRecords();
 }
 
