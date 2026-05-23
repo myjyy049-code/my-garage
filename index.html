@@ -247,9 +247,19 @@
     
     <!-- 燃費計算専用フィールド -->
     <div id="fuel-fields" style="display:none;">
-      <div class="form-group"><label>走行前距離 (km)</label><input type="number" id="record-km-before" placeholder="例：12000"></div>
-      <div class="form-group"><label>走行後距離 (km)</label><input type="number" id="record-km-after" placeholder="例：12500"></div>
-      <div class="form-group"><label>給油量 (L)</label><input type="number" step="0.1" id="record-fuel-amount" placeholder="例：15.5"></div>
+    <div class="form-group"><label>走行前距離 (km)</label><input type="number" id="record-km-before" placeholder="例：12000"></div>
+    <div class="form-group"><label>走行後距離 (km)</label><input type="number" id="record-km-after" placeholder="例：12500"></div>
+    <div class="form-group"><label>給油量 (L)</label><input type="number" step="0.1" id="record-fuel-amount" placeholder="例：15.5"></div>
+  
+    <!-- 燃費計算結果表示エリア -->
+    <div class="form-group">
+    <label>計算結果</label>
+    <div id="fuel-efficiency-display" style="padding:10px; background:#e8f5e9; border-radius:4px; font-weight:bold; color:#2e7d32; border:1px solid #a5d6a7;">
+      燃費: 未計算
+    </div>
+    </div>
+  
+    <div class="form-group"><label>メモ</label><textarea id="record-fuel-memo" placeholder="給油所、燃料の種類など"></textarea></div>
     </div>
     
     <!-- 通常フィールド -->
@@ -501,11 +511,37 @@ function toggleFuelFields() {
   document.getElementById('normal-fields').style.display = isFuel ? 'none' : 'block';
 }
 
+  // 燃費リアルタイム計算
+function updateFuelEfficiencyDisplay() {
+  const kmBefore = parseFloat(document.getElementById('record-km-before').value) || 0;
+  const kmAfter = parseFloat(document.getElementById('record-km-after').value) || 0;
+  const fuelAmount = parseFloat(document.getElementById('record-fuel-amount').value) || 0;
+  
+  const display = document.getElementById('fuel-efficiency-display');
+  
+  if (kmAfter > kmBefore && fuelAmount > 0) {
+    const distance = kmAfter - kmBefore;
+    const efficiency = (distance / fuelAmount).toFixed(1);
+    display.textContent = `燃費: ${efficiency} km/L (走行距離: ${distance} km)`;
+    display.style.background = '#e8f5e9';
+    display.style.color = '#2e7d32';
+  } else {
+    display.textContent = '燃費: 未計算';
+    display.style.background = '#f0f0f0';
+    display.style.color = '#666';
+  }
+}
+
+// 入力時に自動計算
+document.getElementById('record-km-before').addEventListener('input', updateFuelEfficiencyDisplay);
+document.getElementById('record-km-after').addEventListener('input', updateFuelEfficiencyDisplay);
+document.getElementById('record-fuel-amount').addEventListener('input', updateFuelEfficiencyDisplay);
+
 function closeRecordModal() { document.getElementById('record-modal').classList.remove('open'); }
 
 async function saveRecord() {
   const category = document.getElementById('record-category').value;
-  let memo = document.getElementById('record-memo').value;
+  let memo = '';
   let km = null;
   
   // 燃費計算の場合
@@ -514,13 +550,17 @@ async function saveRecord() {
     const kmAfter = parseFloat(document.getElementById('record-km-after').value);
     const fuelAmount = parseFloat(document.getElementById('record-fuel-amount').value);
     
+    memo = document.getElementById('record-fuel-memo').value; // 燃費専用メモ
+    
     if (kmBefore && kmAfter && fuelAmount) {
       const distance = kmAfter - kmBefore;
-      const fuelEconomy = (distance / fuelAmount).toFixed(2);
-      memo = `燃費: ${fuelEconomy} km/L\n走行距離: ${distance} km\n給油量: ${fuelAmount} L\n${memo ? '\n' + memo : ''}`;
+      const fuelEconomy = (distance / fuelAmount).toFixed(1);
+      const autoMemo = `燃費: ${fuelEconomy} km/L\n走行距離: ${distance} km\n給油量: ${fuelAmount} L`;
+      memo = memo ? `${autoMemo}\n\n${memo}` : autoMemo;
       km = kmAfter;
     }
   } else {
+    memo = document.getElementById('record-memo').value; // 通常メモ
     km = parseInt(document.getElementById('record-km').value) || null;
   }
   
