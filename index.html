@@ -191,9 +191,25 @@
       <div id="bike-list"></div>
       <button class="add-bike-btn" onclick="openBikeModal()">＋ バイクを追加</button>
     </div>
+    <!-- ツーリング記録ボタン -->
+<button class="btn-primary" onclick="showTouringList()" style="margin: 1rem; width: calc(100% - 2rem); padding: 1rem; font-size: 1rem; border-radius: 8px;">
+  🏍️ ツーリング記録
+</button>
 
     <!-- バイク詳細＆メンテ記録画面 -->
     <div id="bike-detail-section" style="display:none">
+      <!-- ツーリング記録画面 -->
+<div id="touring-section" style="display:none">
+  <button class="back-btn" onclick="showBikeList()">‹ バイク一覧に戻る</button>
+  
+  <div style="padding:1rem;">
+    <h2 style="margin-bottom:1rem;">🏍️ ツーリング記録</h2>
+    
+    <button class="add-bike-btn" onclick="openTouringModal()">＋ ツーリング追加</button>
+    
+    <div id="touring-list"></div>
+  </div>
+</div>
       <button class="back-btn" onclick="showBikeList()">← バイク一覧に戻る</button>
       <div id="bike-detail-card"></div>
       <div id="records-section">
@@ -261,6 +277,29 @@
   
     <div class="form-group"><label>メモ</label><textarea id="record-fuel-memo" placeholder="給油所、燃料の種類など"></textarea></div>
     </div>
+
+    <!-- ツーリング追加モーダル -->
+<div class="modal-overlay" id="touring-modal">
+  <div class="modal">
+    <h3>ツーリング記録を追加</h3>
+    
+    <div class="form-group"><label>日付</label><input type="date" id="touring-date"></div>
+    <div class="form-group"><label>目的地</label><input type="text" id="touring-destination" placeholder="例：富士山スカイライン"></div>
+    <div class="form-group"><label>ルート ※任意</label><input type="text" id="touring-route" placeholder="例：御殿場IC → 富士山 → 山中湖"></div>
+    <div class="form-group"><label>走行距離 (km) ※任意</label><input type="number" id="touring-distance" placeholder="例：150"></div>
+    <div class="form-group">
+      <label>使用バイク ※任意</label>
+      <select id="touring-bike"></select>
+    </div>
+    <div class="form-group"><label>同行者 ※任意</label><input type="text" id="touring-companions" placeholder="例：山田さん、田中さん"></div>
+    <div class="form-group"><label>メモ ※任意</label><textarea id="touring-memo" placeholder="立ち寄ったスポット、食べたものなど"></textarea></div>
+    
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeTouringModal()">キャンセル</button>
+      <button class="btn-save" onclick="saveTouring()">保存</button>
+    </div>
+  </div>
+</div>
     
     <!-- 通常フィールド -->
     <div id="normal-fields">
@@ -588,6 +627,128 @@ async function deleteRecord(id) {
   if (!confirm('この記録を削除しますか？')) return;
   await sb.from('maintenance_records').delete().eq('id', id);
   loadRecords();
+}
+
+  // ===== ツーリング記録 =====
+function showTouringList() {
+  document.getElementById('bike-list-section').style.display = 'none';
+  document.getElementById('bike-detail-section').style.display = 'none';
+  document.getElementById('touring-section').style.display = 'block';
+  loadTourings();
+}
+
+async function loadTourings() {
+  const { data } = await sb.from('touring_records')
+    .select('*, bikes(name)')
+    .eq('user_id', currentUser.id)
+    .order('date', { ascending: false });
+  renderTourings(data || []);
+}
+
+function renderTourings(tourings) {
+  const list = document.getElementById('touring-list');
+  if (tourings.length === 0) {
+    list.innerHTML = `<div class="empty-msg">まだツーリング記録がありません。「＋ ツーリング追加」から追加してください。</div>`;
+    return;
+  }
+  list.innerHTML = tourings.map(t => `
+    <div class="record-item">
+      <div>
+        <div class="record-title">${t.destination}</div>
+        <div class="record-meta">
+          ${t.date ? `<span>📅 ${t.date}</span>` : ''}
+          ${t.distance ? `<span>📍 ${t.distance} km</span>` : ''}
+          ${t.bikes ? `<span>🏍️ ${t.bikes.name}</span>` : ''}
+          ${t.companions ? `<span>👥 ${t.companions}</span>` : ''}
+        </div>
+        ${t.route ? `<div style="font-size:0.8rem;color:var(--text2);margin-top:0.3rem;">📍 ${t.route}</div>` : ''}
+        ${t.memo ? `<div style="font-size:0.8rem;color:var(--text2);margin-top:0.3rem;">📝 ${t.memo}</div>` : ''}
+      </div>
+      <div>
+        <button class="btn-save" onclick="shareTouring('${t.id}')" style="padding:0.4rem 0.8rem;font-size:0.8rem;margin-bottom:0.5rem;">シェア</button>
+        <button class="delete-btn" onclick="deleteTouring('${t.id}')">🗑</button>
+      </div>
+    </div>`).join('');
+}
+
+function openTouringModal() {
+  document.getElementById('touring-date').value = new Date().toISOString().split('T')[0];
+  ['touring-destination','touring-route','touring-distance','touring-companions','touring-memo'].forEach(id => document.getElementById(id).value = '');
+  
+  // バイク選択肢を作成
+  const bikeSelect = document.getElementById('touring-bike');
+  bikeSelect.innerHTML = '<option value="">選択なし</option>' + 
+    bikesData.map(b => `<option value="${b.id}">${b.name}</option>`).join('');
+  
+  document.getElementById('touring-modal').classList.add('open');
+}
+
+function closeTouringModal() {
+  document.getElementById('touring-modal').classList.remove('open');
+}
+
+async function saveTouring() {
+  const bikeId = document.getElementById('touring-bike').value || null;
+  const distance = parseInt(document.getElementById('touring-distance').value) || null;
+  
+  const payload = {
+    user_id: currentUser.id,
+    bike_id: bikeId,
+    date: document.getElementById('touring-date').value,
+    destination: document.getElementById('touring-destination').value,
+    route: document.getElementById('touring-route').value,
+    distance: distance,
+    companions: document.getElementById('touring-companions').value,
+    memo: document.getElementById('touring-memo').value
+  };
+  
+  await sb.from('touring_records').insert(payload);
+  
+  // バイクの走行距離を更新
+  if (bikeId && distance) {
+    const bike = bikesData.find(b => b.id === bikeId);
+    if (bike) {
+      const newKm = (bike.km || 0) + distance;
+      await sb.from('bikes').update({ km: newKm }).eq('id', bikeId);
+    }
+  }
+  
+  closeTouringModal();
+  loadTourings();
+  await loadBikes(); // バイク情報も再読み込み
+}
+
+async function deleteTouring(id) {
+  if (!confirm('このツーリング記録を削除しますか?')) return;
+  await sb.from('touring_records').delete().eq('id', id);
+  loadTourings();
+}
+
+async function shareTouring(id) {
+  const { data } = await sb.from('touring_records')
+    .select('*, bikes(name)')
+    .eq('id', id)
+    .single();
+  
+  if (!data) return;
+  
+  const shareText = `🏍️ ツーリング記録\n\n📅 ${data.date}\n📍 ${data.destination}\n${data.route ? `🗺️ ${data.route}\n` : ''}${data.distance ? `📏 ${data.distance} km\n` : ''}${data.bikes ? `🏍️ ${data.bikes.name}\n` : ''}${data.companions ? `👥 ${data.companions}\n` : ''}${data.memo ? `\n${data.memo}\n` : ''}\n#マイガレージ #ChainonRiders`;
+  
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: `ツーリング記録: ${data.destination}`,
+        text: shareText,
+        url: window.location.href
+      });
+    } catch (err) {
+      console.log('シェアキャンセル');
+    }
+  } else {
+    // 非対応ブラウザの場合はクリップボードにコピー
+    navigator.clipboard.writeText(shareText);
+    alert('クリップボードにコピーしました!');
+  }
 }
 
 init();
