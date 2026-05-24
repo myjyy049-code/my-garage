@@ -135,8 +135,8 @@
   .back-btn { background: none; border: none; color: var(--text2); cursor: pointer; font-size: 0.85rem; font-family: 'Noto Sans JP', sans-serif; padding: 0.5rem 0; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; transition: color 0.2s; }
   .back-btn:hover { color: var(--accent); }
 
-  .touring-btn { background: var(--accent); color: #000; border: none; padding: 0.9rem; border-radius: 4px; font-size: 0.95rem; font-weight: 700; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; width: 100%; text-align: center; transition: opacity 0.2s; margin-bottom: 1.5rem; }
-  .touring-btn:hover { opacity: 0.85; }
+  .menu-btn { background: none; border: 1px dashed var(--border); color: var(--text2); padding: 0.8rem; border-radius: 4px; font-size: 0.85rem; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; width: 100%; text-align: center; transition: all 0.2s; margin-bottom: 0.75rem; }
+  .menu-btn:hover { border-color: var(--accent); color: var(--accent); }
 
   @media (max-width: 600px) {
     .main { padding: 1rem; }
@@ -144,8 +144,6 @@
     .bike-name { font-size: 1.4rem; }
   }
 </style>
-  <!-- Google Maps API -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYLpr60yRMoznUaaxov6-kxSdmJwZKluE&callback=initMap" async defer></script>
 </head>
 <body>
 
@@ -183,7 +181,8 @@
   <div class="main">
     <!-- バイク一覧画面 -->
     <div id="bike-list-section">
-      <button class="touring-btn" onclick="showTouringList()">ツーリング記録</button>
+      <button class="menu-btn" onclick="showTouringList()">🏍️ ツーリング記録</button>
+      <button class="menu-btn" onclick="startLocationShare()">📍 位置共有を開始</button>
       
       <div class="sort-control">
         <select id="bike-sort" onchange="sortBikes()">
@@ -198,33 +197,32 @@
       <div id="bike-list"></div>
       <button class="add-bike-btn" onclick="openBikeModal()">＋ バイクを追加</button>
     </div>
-    <button class="touring-btn" onclick="showTouringList()">🏍️ ツーリング記録</button>
-<button class="touring-btn" onclick="startLocationShare()" style="background: #00ff88;">📍 位置共有を開始</button>
 
     <!-- ツーリング記録画面 -->
     <div id="touring-section" style="display:none">
       <button class="back-btn" onclick="showBikeList()">‹ バイク一覧に戻る</button>
       
-      <h2 style="margin-bottom:1rem;">ツーリング記録</h2>
+      <h2 style="margin-bottom:1rem;">🏍️ ツーリング記録</h2>
       
       <button class="add-bike-btn" onclick="openTouringModal()">＋ ツーリング追加</button>
       
       <div id="touring-list"></div>
     </div>
+
     <!-- 位置共有画面 -->
-<div id="location-share-section" style="display:none">
-  <button class="back-btn" onclick="stopLocationShare()">‹ 共有を終了して戻る</button>
-  
-  <h2 style="margin-bottom:1rem;">📍 位置共有中</h2>
-  
-  <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:1rem;margin-bottom:1rem;">
-    <div style="font-size:0.9rem;color:var(--text2);margin-bottom:0.5rem;">セッション: <span style="color:var(--accent);font-weight:700;" id="session-date"></span></div>
-    <div style="font-size:0.9rem;color:var(--text2);">参加者: <span style="color:var(--text);font-weight:700;" id="participant-count">0</span>人</div>
-    <div style="font-size:0.8rem;color:var(--text2);margin-top:0.5rem;">※3分ごとに自動更新されます</div>
-  </div>
-  
-  <div id="map" style="width:100%;height:500px;border-radius:4px;border:1px solid var(--border);"></div>
-</div>
+    <div id="location-share-section" style="display:none">
+      <button class="back-btn" onclick="stopLocationShare()">‹ 共有を終了して戻る</button>
+      
+      <h2 style="margin-bottom:1rem;">📍 位置共有中</h2>
+      
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:1rem;margin-bottom:1rem;">
+        <div style="font-size:0.9rem;color:var(--text2);margin-bottom:0.5rem;">セッション: <span style="color:var(--accent);font-weight:700;" id="session-date"></span></div>
+        <div style="font-size:0.9rem;color:var(--text2);">参加者: <span style="color:var(--text);font-weight:700;" id="participant-count">0</span>人</div>
+        <div style="font-size:0.8rem;color:var(--text2);margin-top:0.5rem;">※3分ごとに自動更新されます</div>
+      </div>
+      
+      <div id="map" style="width:100%;height:500px;border-radius:4px;border:1px solid var(--border);"></div>
+    </div>
 
     <!-- バイク詳細＆メンテ記録画面 -->
     <div id="bike-detail-section" style="display:none">
@@ -333,6 +331,7 @@
   </div>
 </div>
 
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYLpr60yRMoznUaaxov6-kxSdmJwZKluE"></script>
 <script>
 const SUPABASE_URL = 'https://owgoceocaeututmtecsz.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_BRnWD14z9rBwpwmAaj-FZw_WiccwQiC';
@@ -343,6 +342,13 @@ let currentUser = null;
 let currentTab = 'engine';
 let bikesData = [];
 let selectedBike = null;
+
+// 位置共有用変数
+let map = null;
+let markers = {};
+let locationUpdateInterval = null;
+let participantsLoadInterval = null;
+let isLocationSharing = false;
 
 const categoryLabels = { engine: 'エンジン系', drive: '駆動系', electric: '電気系', fuel: '燃費計算' };
 
@@ -433,6 +439,7 @@ function selectBike(bikeId) {
   selectedBike = bikesData.find(b => b.id === bikeId);
   document.getElementById('bike-list-section').style.display = 'none';
   document.getElementById('touring-section').style.display = 'none';
+  document.getElementById('location-share-section').style.display = 'none';
   document.getElementById('bike-detail-section').style.display = 'block';
   renderBikeDetail();
   currentTab = 'engine';
@@ -443,8 +450,20 @@ function selectBike(bikeId) {
 
 function showBikeList() {
   selectedBike = null;
+  
+  // 位置共有のインターバルをクリア
+  if (locationUpdateInterval) {
+    clearInterval(locationUpdateInterval);
+    locationUpdateInterval = null;
+  }
+  if (participantsLoadInterval) {
+    clearInterval(participantsLoadInterval);
+    participantsLoadInterval = null;
+  }
+  
   document.getElementById('bike-detail-section').style.display = 'none';
   document.getElementById('touring-section').style.display = 'none';
+  document.getElementById('location-share-section').style.display = 'none';
   document.getElementById('bike-list-section').style.display = 'block';
   loadBikes();
 }
@@ -593,9 +612,15 @@ function updateFuelEfficiencyDisplay() {
 
 // 入力時に自動計算（ページ読み込み後に設定）
 window.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('record-km-before').addEventListener('input', updateFuelEfficiencyDisplay);
-  document.getElementById('record-km-after').addEventListener('input', updateFuelEfficiencyDisplay);
-  document.getElementById('record-fuel-amount').addEventListener('input', updateFuelEfficiencyDisplay);
+  const kmBefore = document.getElementById('record-km-before');
+  const kmAfter = document.getElementById('record-km-after');
+  const fuelAmount = document.getElementById('record-fuel-amount');
+  
+  if (kmBefore && kmAfter && fuelAmount) {
+    kmBefore.addEventListener('input', updateFuelEfficiencyDisplay);
+    kmAfter.addEventListener('input', updateFuelEfficiencyDisplay);
+    fuelAmount.addEventListener('input', updateFuelEfficiencyDisplay);
+  }
 });
 
 function closeRecordModal() { document.getElementById('record-modal').classList.remove('open'); }
@@ -655,6 +680,7 @@ async function deleteRecord(id) {
 function showTouringList() {
   document.getElementById('bike-list-section').style.display = 'none';
   document.getElementById('bike-detail-section').style.display = 'none';
+  document.getElementById('location-share-section').style.display = 'none';
   document.getElementById('touring-section').style.display = 'block';
   loadTourings();
 }
@@ -772,16 +798,8 @@ async function shareTouring(id) {
     alert('クリップボードにコピーしました!');
   }
 }
-  // ===== 位置共有 =====
-let map = null;
-let markers = {};
-let locationUpdateInterval = null;
-let isLocationSharing = false;
 
-function initMap() {
-  // Google Maps初期化用（自動的に呼ばれる）
-}
-
+// ===== 位置共有 =====
 async function startLocationShare() {
   // 位置情報の許可を取得
   if (!navigator.geolocation) {
@@ -820,7 +838,7 @@ async function startLocationShare() {
       }, 3 * 60 * 1000); // 3分
       
       // 10秒ごとに他の参加者の位置を取得
-      setInterval(loadParticipants, 10 * 1000);
+      participantsLoadInterval = setInterval(loadParticipants, 10 * 1000);
       loadParticipants();
     },
     (error) => {
@@ -919,6 +937,10 @@ async function stopLocationShare() {
   if (locationUpdateInterval) {
     clearInterval(locationUpdateInterval);
     locationUpdateInterval = null;
+  }
+  if (participantsLoadInterval) {
+    clearInterval(participantsLoadInterval);
+    participantsLoadInterval = null;
   }
   
   // 自分の位置情報を削除
