@@ -109,7 +109,7 @@
   .record-list { display: flex; flex-direction: column; gap: 0.75rem; }
   .record-item { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 1rem 1.25rem; display: grid; grid-template-columns: 1fr auto; gap: 0.5rem; align-items: start; }
   .record-title { font-weight: 500; font-size: 0.95rem; }
-  .record-meta { font-size: 0.8rem; color: var(--text2); margin-top: 0.25rem; display: flex; gap: 1rem; }
+  .record-meta { font-size: 0.8rem; color: var(--text2); margin-top: 0.25rem; display: flex; flex-wrap: wrap; gap: 1rem; }
   .record-date { font-family: 'Rajdhani', sans-serif; font-size: 0.9rem; color: var(--text2); text-align: right; }
   .delete-btn { background: none; border: none; color: var(--text2); cursor: pointer; font-size: 1rem; padding: 0.2rem; transition: color 0.2s; align-self: center; margin-left: 0.5rem; }
   .delete-btn:hover { color: var(--danger); }
@@ -134,6 +134,9 @@
   .loading { display: flex; align-items: center; justify-content: center; min-height: 100vh; font-family: 'Rajdhani', sans-serif; font-size: 1.5rem; color: var(--accent); letter-spacing: 0.2em; }
   .back-btn { background: none; border: none; color: var(--text2); cursor: pointer; font-size: 0.85rem; font-family: 'Noto Sans JP', sans-serif; padding: 0.5rem 0; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; transition: color 0.2s; }
   .back-btn:hover { color: var(--accent); }
+
+  .touring-btn { background: var(--accent); color: #000; border: none; padding: 0.9rem; border-radius: 4px; font-size: 0.95rem; font-weight: 700; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; width: 100%; text-align: center; transition: opacity 0.2s; margin-bottom: 1.5rem; }
+  .touring-btn:hover { opacity: 0.85; }
 
   @media (max-width: 600px) {
     .main { padding: 1rem; }
@@ -178,6 +181,8 @@
   <div class="main">
     <!-- バイク一覧画面 -->
     <div id="bike-list-section">
+      <button class="touring-btn" onclick="showTouringList()">🏍️ ツーリング記録</button>
+      
       <div class="sort-control">
         <select id="bike-sort" onchange="sortBikes()">
           <option value="date-desc">登録日（新しい順）</option>
@@ -191,26 +196,21 @@
       <div id="bike-list"></div>
       <button class="add-bike-btn" onclick="openBikeModal()">＋ バイクを追加</button>
     </div>
-    <!-- ツーリング記録ボタン -->
-<button class="btn-primary" onclick="showTouringList()" style="margin: 1rem; width: calc(100% - 2rem); padding: 1rem; font-size: 1rem; border-radius: 8px;">
-  🏍️ ツーリング記録
-</button>
+
+    <!-- ツーリング記録画面 -->
+    <div id="touring-section" style="display:none">
+      <button class="back-btn" onclick="showBikeList()">‹ バイク一覧に戻る</button>
+      
+      <h2 style="margin-bottom:1rem;">🏍️ ツーリング記録</h2>
+      
+      <button class="add-bike-btn" onclick="openTouringModal()">＋ ツーリング追加</button>
+      
+      <div id="touring-list"></div>
+    </div>
 
     <!-- バイク詳細＆メンテ記録画面 -->
     <div id="bike-detail-section" style="display:none">
-      <!-- ツーリング記録画面 -->
-<div id="touring-section" style="display:none">
-  <button class="back-btn" onclick="showBikeList()">‹ バイク一覧に戻る</button>
-  
-  <div style="padding:1rem;">
-    <h2 style="margin-bottom:1rem;">🏍️ ツーリング記録</h2>
-    
-    <button class="add-bike-btn" onclick="openTouringModal()">＋ ツーリング追加</button>
-    
-    <div id="touring-list"></div>
-  </div>
-</div>
-      <button class="back-btn" onclick="showBikeList()">← バイク一覧に戻る</button>
+      <button class="back-btn" onclick="showBikeList()">‹ バイク一覧に戻る</button>
       <div id="bike-detail-card"></div>
       <div id="records-section">
         <div class="tabs">
@@ -263,22 +263,36 @@
     
     <!-- 燃費計算専用フィールド -->
     <div id="fuel-fields" style="display:none;">
-    <div class="form-group"><label>走行前距離 (km)</label><input type="number" id="record-km-before" placeholder="例：12000"></div>
-    <div class="form-group"><label>走行後距離 (km)</label><input type="number" id="record-km-after" placeholder="例：12500"></div>
-    <div class="form-group"><label>給油量 (L)</label><input type="number" step="0.1" id="record-fuel-amount" placeholder="例：15.5"></div>
-  
-    <!-- 燃費計算結果表示エリア -->
-    <div class="form-group">
-    <label>計算結果</label>
-    <div id="fuel-efficiency-display" style="padding:10px; background:#e8f5e9; border-radius:4px; font-weight:bold; color:#2e7d32; border:1px solid #a5d6a7;">
-      燃費: 未計算
+      <div class="form-group"><label>走行前距離 (km)</label><input type="number" id="record-km-before" placeholder="例：12000"></div>
+      <div class="form-group"><label>走行後距離 (km)</label><input type="number" id="record-km-after" placeholder="例：12500"></div>
+      <div class="form-group"><label>給油量 (L)</label><input type="number" step="0.1" id="record-fuel-amount" placeholder="例：15.5"></div>
+      
+      <!-- 燃費計算結果表示エリア -->
+      <div class="form-group">
+        <label>計算結果</label>
+        <div id="fuel-efficiency-display" style="padding:10px; background:#e8f5e9; border-radius:4px; font-weight:bold; color:#2e7d32; border:1px solid #a5d6a7;">
+          燃費: 未計算
+        </div>
+      </div>
+      
+      <div class="form-group"><label>メモ</label><textarea id="record-fuel-memo" placeholder="給油所、燃料の種類など"></textarea></div>
     </div>
+    
+    <!-- 通常フィールド -->
+    <div id="normal-fields">
+      <div class="form-group"><label>走行距離 (km)</label><input type="number" id="record-km" placeholder="例：12500"></div>
+      <div class="form-group"><label>次回予定距離 (km) ※任意</label><input type="number" id="record-next-km" placeholder="例：15500"></div>
+      <div class="form-group"><label>メモ</label><textarea id="record-memo" placeholder="使用したパーツ、費用など"></textarea></div>
     </div>
-  
-    <div class="form-group"><label>メモ</label><textarea id="record-fuel-memo" placeholder="給油所、燃料の種類など"></textarea></div>
+    
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeRecordModal()">キャンセル</button>
+      <button class="btn-save" onclick="saveRecord()">保存</button>
     </div>
+  </div>
+</div>
 
-    <!-- ツーリング追加モーダル -->
+<!-- ツーリング追加モーダル -->
 <div class="modal-overlay" id="touring-modal">
   <div class="modal">
     <h3>ツーリング記録を追加</h3>
@@ -297,20 +311,6 @@
     <div class="modal-btns">
       <button class="btn-cancel" onclick="closeTouringModal()">キャンセル</button>
       <button class="btn-save" onclick="saveTouring()">保存</button>
-    </div>
-  </div>
-</div>
-    
-    <!-- 通常フィールド -->
-    <div id="normal-fields">
-      <div class="form-group"><label>走行距離 (km)</label><input type="number" id="record-km" placeholder="例：12500"></div>
-      <div class="form-group"><label>次回予定距離 (km) ※任意</label><input type="number" id="record-next-km" placeholder="例：15500"></div>
-    </div>
-    
-    <div class="form-group"><label>メモ</label><textarea id="record-memo" placeholder="使用したパーツ、費用など"></textarea></div>
-    <div class="modal-btns">
-      <button class="btn-cancel" onclick="closeRecordModal()">キャンセル</button>
-      <button class="btn-save" onclick="saveRecord()">保存</button>
     </div>
   </div>
 </div>
@@ -414,6 +414,7 @@ function renderBikeList() {
 function selectBike(bikeId) {
   selectedBike = bikesData.find(b => b.id === bikeId);
   document.getElementById('bike-list-section').style.display = 'none';
+  document.getElementById('touring-section').style.display = 'none';
   document.getElementById('bike-detail-section').style.display = 'block';
   renderBikeDetail();
   currentTab = 'engine';
@@ -425,6 +426,7 @@ function selectBike(bikeId) {
 function showBikeList() {
   selectedBike = null;
   document.getElementById('bike-detail-section').style.display = 'none';
+  document.getElementById('touring-section').style.display = 'none';
   document.getElementById('bike-list-section').style.display = 'block';
   loadBikes();
 }
@@ -538,7 +540,7 @@ function renderRecords(records) {
 function openAddRecord() {
   document.getElementById('record-category').value = currentTab;
   document.getElementById('record-date').value = new Date().toISOString().split('T')[0];
-  ['record-title','record-km','record-next-km','record-memo','record-km-before','record-km-after','record-fuel-amount'].forEach(id => document.getElementById(id).value = '');
+  ['record-title','record-km','record-next-km','record-memo','record-km-before','record-km-after','record-fuel-amount','record-fuel-memo'].forEach(id => document.getElementById(id).value = '');
   toggleFuelFields();
   document.getElementById('record-modal').classList.add('open');
 }
@@ -550,7 +552,7 @@ function toggleFuelFields() {
   document.getElementById('normal-fields').style.display = isFuel ? 'none' : 'block';
 }
 
-  // 燃費リアルタイム計算
+// 燃費リアルタイム計算
 function updateFuelEfficiencyDisplay() {
   const kmBefore = parseFloat(document.getElementById('record-km-before').value) || 0;
   const kmAfter = parseFloat(document.getElementById('record-km-after').value) || 0;
@@ -571,10 +573,12 @@ function updateFuelEfficiencyDisplay() {
   }
 }
 
-// 入力時に自動計算
-document.getElementById('record-km-before').addEventListener('input', updateFuelEfficiencyDisplay);
-document.getElementById('record-km-after').addEventListener('input', updateFuelEfficiencyDisplay);
-document.getElementById('record-fuel-amount').addEventListener('input', updateFuelEfficiencyDisplay);
+// 入力時に自動計算（ページ読み込み後に設定）
+window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('record-km-before').addEventListener('input', updateFuelEfficiencyDisplay);
+  document.getElementById('record-km-after').addEventListener('input', updateFuelEfficiencyDisplay);
+  document.getElementById('record-fuel-amount').addEventListener('input', updateFuelEfficiencyDisplay);
+});
 
 function closeRecordModal() { document.getElementById('record-modal').classList.remove('open'); }
 
@@ -629,7 +633,7 @@ async function deleteRecord(id) {
   loadRecords();
 }
 
-  // ===== ツーリング記録 =====
+// ===== ツーリング記録 =====
 function showTouringList() {
   document.getElementById('bike-list-section').style.display = 'none';
   document.getElementById('bike-detail-section').style.display = 'none';
@@ -664,8 +668,8 @@ function renderTourings(tourings) {
         ${t.route ? `<div style="font-size:0.8rem;color:var(--text2);margin-top:0.3rem;">📍 ${t.route}</div>` : ''}
         ${t.memo ? `<div style="font-size:0.8rem;color:var(--text2);margin-top:0.3rem;">📝 ${t.memo}</div>` : ''}
       </div>
-      <div>
-        <button class="btn-save" onclick="shareTouring('${t.id}')" style="padding:0.4rem 0.8rem;font-size:0.8rem;margin-bottom:0.5rem;">シェア</button>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.5rem;">
+        <button class="btn-save" onclick="shareTouring('${t.id}')" style="padding:0.4rem 0.8rem;font-size:0.8rem;">シェア</button>
         <button class="delete-btn" onclick="deleteTouring('${t.id}')">🗑</button>
       </div>
     </div>`).join('');
