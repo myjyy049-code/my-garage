@@ -144,6 +144,8 @@
     .bike-name { font-size: 1.4rem; }
   }
 </style>
+  <!-- Google Maps API -->
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
 </head>
 <body>
 
@@ -196,6 +198,8 @@
       <div id="bike-list"></div>
       <button class="add-bike-btn" onclick="openBikeModal()">＋ バイクを追加</button>
     </div>
+    <button class="touring-btn" onclick="showTouringList()">🏍️ ツーリング記録</button>
+<button class="touring-btn" onclick="startLocationShare()" style="background: #00ff88;">📍 位置共有を開始</button>
 
     <!-- ツーリング記録画面 -->
     <div id="touring-section" style="display:none">
@@ -207,6 +211,20 @@
       
       <div id="touring-list"></div>
     </div>
+    <!-- 位置共有画面 -->
+<div id="location-share-section" style="display:none">
+  <button class="back-btn" onclick="stopLocationShare()">‹ 共有を終了して戻る</button>
+  
+  <h2 style="margin-bottom:1rem;">📍 位置共有中</h2>
+  
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:1rem;margin-bottom:1rem;">
+    <div style="font-size:0.9rem;color:var(--text2);margin-bottom:0.5rem;">セッション: <span style="color:var(--accent);font-weight:700;" id="session-date"></span></div>
+    <div style="font-size:0.9rem;color:var(--text2);">参加者: <span style="color:var(--text);font-weight:700;" id="participant-count">0</span>人</div>
+    <div style="font-size:0.8rem;color:var(--text2);margin-top:0.5rem;">※3分ごとに自動更新されます</div>
+  </div>
+  
+  <div id="map" style="width:100%;height:500px;border-radius:4px;border:1px solid var(--border);"></div>
+</div>
 
     <!-- バイク詳細＆メンテ記録画面 -->
     <div id="bike-detail-section" style="display:none">
@@ -753,6 +771,162 @@ async function shareTouring(id) {
     navigator.clipboard.writeText(shareText);
     alert('クリップボードにコピーしました!');
   }
+}
+  // ===== 位置共有 =====
+let map = null;
+let markers = {};
+let locationUpdateInterval = null;
+let isLocationSharing = false;
+
+function initMap() {
+  // Google Maps初期化用（自動的に呼ばれる）
+}
+
+async function startLocationShare() {
+  // 位置情報の許可を取得
+  if (!navigator.geolocation) {
+    alert('お使いのブラウザは位置情報に対応していません');
+    return;
+  }
+  
+  navigator.geolocation.getCurrentPosition(
+    async (position) => {
+      isLocationSharing = true;
+      
+      // 初回位置情報を登録
+      await updateMyLocation(position.coords.latitude, position.coords.longitude);
+      
+      // 画面切り替え
+      document.getElementById('bike-list-section').style.display = 'none';
+      document.getElementById('touring-section').style.display = 'none';
+      document.getElementById('bike-detail-section').style.display = 'none';
+      document.getElementById('location-share-section').style.display = 'block';
+      
+      // セッション日付表示
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('session-date').textContent = today;
+      
+      // 地図を初期化
+      initLocationMap(position.coords.latitude, position.coords.longitude);
+      
+      // 3分ごとに位置情報を更新
+      locationUpdateInterval = setInterval(async () => {
+        navigator.geolocation.getCurrentPosition(
+          async (pos) => {
+            await updateMyLocation(pos.coords.latitude, pos.coords.longitude);
+          },
+          (error) => console.error('位置情報取得エラー:', error)
+        );
+      }, 3 * 60 * 1000); // 3分
+      
+      // 10秒ごとに他の参加者の位置を取得
+      setInterval(loadParticipants, 10 * 1000);
+      loadParticipants();
+    },
+    (error) => {
+      alert('位置情報の取得に失敗しました。設定を確認してください。');
+      console.error('位置情報エラー:', error);
+    }
+  );
+}
+
+function initLocationMap(lat, lng) {
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: { lat, lng },
+    zoom: 13,
+    mapTypeControl: true,
+    streetViewControl: false,
+    fullscreenControl: true
+  });
+}
+
+async function updateMyLocation(lat, lng) {
+  const userName = currentUser.user_metadata?.full_name || currentUser.email || 'ユーザー';
+  const today = new Date().toISOString().split('T')[0];
+  
+  // 既存のレコードを削除して新規作成（upsert的な処理）
+  await sb.from('location_shares').delete().eq('user_id', currentUser.id).eq('session_date', today);
+  
+  const payload = {
+    user_id: currentUser.id,
+    user_name: userName,
+    session_date: today,
+    latitude: lat,
+    longitude: lng
+  };
+  
+  await sb.from('location_shares').insert(payload);
+}
+
+async function loadParticipants() {
+  const today = new Date().toISOString().split('T')[0];
+  const { data } = await sb.from('location_shares')
+    .select('*')
+    .eq('session_date', today);
+  
+  if (!data || !map) return;
+  
+  // 参加者数を更新
+  document.getElementById('participant-count').textContent = data.length;
+  
+  // 既存のマーカーをクリア
+  Object.values(markers).forEach(marker => marker.setMap(null));
+  markers = {};
+  
+  // 各参加者のマーカーを作成
+  data.forEach(participant => {
+    const position = { lat: participant.latitude, lng: participant.longitude };
+    
+    const marker = new google.maps.Marker({
+      position: position,
+      map: map,
+      title: participant.user_name,
+      label: {
+        text: participant.user_name.charAt(0).toUpperCase(),
+        color: 'white',
+        fontSize: '14px',
+        fontWeight: 'bold'
+      },
+      icon: {
+        path: google.maps.SymbolPath.CIRCLE,
+        scale: 20,
+        fillColor: participant.user_id === currentUser.id ? '#ff6b00' : '#00ff88',
+        fillOpacity: 1,
+        strokeColor: 'white',
+        strokeWeight: 3
+      }
+    });
+    
+    // 情報ウィンドウ
+    const infoWindow = new google.maps.InfoWindow({
+      content: `<div style="color:#000;font-weight:700;">${participant.user_name}</div><div style="font-size:0.8rem;color:#666;">更新: ${new Date(participant.updated_at).toLocaleTimeString('ja-JP')}</div>`
+    });
+    
+    marker.addListener('click', () => {
+      infoWindow.open(map, marker);
+    });
+    
+    markers[participant.user_id] = marker;
+  });
+}
+
+async function stopLocationShare() {
+  if (!confirm('位置共有を終了しますか？')) return;
+  
+  isLocationSharing = false;
+  
+  // 定期更新を停止
+  if (locationUpdateInterval) {
+    clearInterval(locationUpdateInterval);
+    locationUpdateInterval = null;
+  }
+  
+  // 自分の位置情報を削除
+  const today = new Date().toISOString().split('T')[0];
+  await sb.from('location_shares').delete().eq('user_id', currentUser.id).eq('session_date', today);
+  
+  // バイク一覧に戻る
+  showBikeList();
 }
 
 init();
