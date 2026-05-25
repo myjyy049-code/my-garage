@@ -955,9 +955,12 @@ async function stopLocationShare() {
 
   // ここに追加
 function openLine() {
-  const a = document.createElement('a');
-  a.href = 'line://';
-  a.click();
+  try {
+    window.open('line://', '_self');
+  } catch (e) {
+    // フォールバック: LINE公式サイトを開く
+    window.open('https://line.me/R/', '_blank');
+  }
 }
 
 init();
