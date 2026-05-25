@@ -955,18 +955,9 @@ async function stopLocationShare() {
 
   // ここに追加
 function openLine() {
-  // iOSの場合
-  if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-    window.location.href = 'line://';
-  }
-  // Androidの場合
-  else if (/Android/i.test(navigator.userAgent)) {
-    window.location.href = 'intent://msg/#Intent;scheme=line;package=jp.naver.line.android;end';
-  }
-  // PCやその他の場合
-  else {
-    window.open('https://line.me/R/', '_blank');
-  }
+  const a = document.createElement('a');
+  a.href = 'line://';
+  a.click();
 }
 
 init();
