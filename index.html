@@ -12,7 +12,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<!-- Leaflet.js (OSM) -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
@@ -127,7 +126,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans JP', s
 .back-btn:hover { color: var(--accent); }
 .menu-btn { background: none; border: 1px dashed var(--border); color: var(--text2); padding: 0.8rem; border-radius: 4px; font-size: 0.85rem; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; width: 100%; text-align: center; transition: all 0.2s; margin-bottom: 0.75rem; }
 .menu-btn:hover { border-color: var(--accent); color: var(--accent); }
-
+ 
 /* ===== ツーリング中画面 ===== */
 #touring-live-section { display: none; }
 .touring-live-header {
@@ -184,8 +183,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans JP', s
   border-radius: 4px;
   border: 1px solid var(--border);
 }
-
-/* ツーリング記録一覧の地図ボタン */
+ 
 .map-view-btn {
   background: none;
   border: 1px solid var(--drive);
@@ -198,8 +196,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans JP', s
   transition: all 0.2s;
 }
 .map-view-btn:hover { background: rgba(68,170,255,0.1); }
-
-/* ツーリング記録の地図モーダル */
+ 
 #touring-map-modal { z-index: 1100; }
 #stop-touring-modal { z-index: 1100; }
 #touring-record-map {
@@ -209,12 +206,11 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans JP', s
   border: 1px solid var(--border);
   margin-top: 1rem;
 }
-
-/* Leafletのダークテーマ調整 */
+ 
 .leaflet-container { background: #1a1a1a; }
 .leaflet-popup-content-wrapper { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
 .leaflet-popup-tip { background: var(--surface); }
-
+ 
 @media (max-width: 600px) {
   .main { padding: 1rem; }
   .tab { padding: 0.6rem 0.9rem; font-size: 0.82rem; }
@@ -225,9 +221,9 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans JP', s
 </style>
 </head>
 <body>
-
+ 
 <div class="loading" id="loading">LOADING...</div>
-
+ 
 <div id="login-screen" style="display:none">
   <div class="login-logo">MY GARAGE</div>
   <div class="login-sub">バイクメンテナンス管理</div>
@@ -245,7 +241,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans JP', s
     </button>
   </div>
 </div>
-
+ 
 <div id="app-screen" style="display:none">
   <div class="header">
     <div>
@@ -257,10 +253,9 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans JP', s
       <button class="logout-btn" onclick="logout()">ログアウト</button>
     </div>
   </div>
-
+ 
   <div class="main">
-
-    <!-- バイク一覧画面 -->
+ 
     <div id="bike-list-section">
       <button class="menu-btn" onclick="showTouringList()">🏍️ ツーリング記録</button>
       <button class="menu-btn" onclick="startTouring()">▶ ツーリング開始</button>
@@ -277,19 +272,16 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans JP', s
       <div id="bike-list"></div>
       <button class="add-bike-btn" onclick="openBikeModal()">＋ バイクを追加</button>
     </div>
-
-    <!-- ツーリング記録一覧画面 -->
+ 
     <div id="touring-section" style="display:none">
       <button class="back-btn" onclick="showBikeList()">‹ バイク一覧に戻る</button>
       <h2 style="margin-bottom:1rem;">🏍️ ツーリング記録</h2>
       <button class="add-bike-btn" onclick="openTouringModal()">＋ ツーリング追加</button>
       <div id="touring-list"></div>
     </div>
-
-    <!-- ツーリング中画面（GPS + 位置共有 + OSM） -->
+ 
     <div id="touring-live-section">
       <button class="back-btn" onclick="confirmStopTouring()">‹ 戻る</button>
-
       <div class="touring-live-header">
         <div class="touring-live-stats">
           <div class="touring-stat">
@@ -310,16 +302,13 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans JP', s
           <button class="btn-stop" onclick="confirmStopTouring()">⏹ 終了</button>
         </div>
       </div>
-
       <div class="participants-bar" id="participants-bar">
         <span>参加者:</span>
         <span id="participants-list"></span>
       </div>
-
       <div id="touring-live-map"></div>
     </div>
-
-    <!-- バイク詳細＆メンテ記録画面 -->
+ 
     <div id="bike-detail-section" style="display:none">
       <button class="back-btn" onclick="showBikeList()">‹ バイク一覧に戻る</button>
       <div id="bike-detail-card"></div>
@@ -337,10 +326,10 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans JP', s
         <div class="record-list" id="record-list"></div>
       </div>
     </div>
-
+ 
   </div>
 </div>
-
+ 
 <!-- バイク登録/編集モーダル -->
 <div class="modal-overlay" id="bike-modal">
   <div class="modal">
@@ -357,7 +346,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans JP', s
     </div>
   </div>
 </div>
-
+ 
 <!-- メンテ記録モーダル -->
 <div class="modal-overlay" id="record-modal">
   <div class="modal">
@@ -393,7 +382,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans JP', s
     </div>
   </div>
 </div>
-
+ 
 <!-- ツーリング追加モーダル -->
 <div class="modal-overlay" id="touring-modal">
   <div class="modal">
@@ -414,7 +403,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans JP', s
     </div>
   </div>
 </div>
-
+ 
 <!-- ツーリング終了確認モーダル -->
 <div class="modal-overlay" id="stop-touring-modal">
   <div class="modal">
@@ -428,7 +417,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans JP', s
     </div>
   </div>
 </div>
-
+ 
 <!-- ツーリング記録の地図表示モーダル -->
 <div class="modal-overlay" id="touring-map-modal">
   <div class="modal" style="max-width:700px;">
@@ -439,25 +428,24 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans JP', s
     </div>
   </div>
 </div>
-
+ 
 <script>
 const SUPABASE_URL = 'https://owgoceocaeututmtecsz.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_BRnWD14z9rBwpwmAaj-FZw_WiccwQiC';
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
-
+ 
 let currentUser = null;
 let currentTab = 'engine';
 let bikesData = [];
 let selectedBike = null;
 let editingTouringId = null;
-
-// ===== ツーリングライブ用変数 =====
+ 
 let liveMap = null;
 let liveMyMarker = null;
 let liveRoutePolyline = null;
-let liveGpsCoords = [];          // GPSログ（座標配列）
-let liveMemberMarkers = {};      // 仲間のマーカー
+let liveGpsCoords = [];
+let liveMemberMarkers = {};
 let liveStartTime = null;
 let liveTimerInterval = null;
 let liveLocationWatchId = null;
@@ -466,13 +454,11 @@ let liveParticipantsInterval = null;
 let liveTotalDistance = 0;
 let liveLastCoord = null;
 let isTouring = false;
-
-// ツーリング記録地図用
+ 
 let recordMap = null;
-
+ 
 const categoryLabels = { engine: 'エンジン系', drive: '駆動系', electric: '電気系', fuel: '燃費計算' };
-
-// ===== 初期化 =====
+ 
 async function init() {
   const { data: { session } } = await sb.auth.getSession();
   if (session) { currentUser = session.user; showApp(); }
@@ -482,13 +468,13 @@ async function init() {
     else { currentUser = null; showLogin(); }
   });
 }
-
+ 
 function showLogin() {
   document.getElementById('loading').style.display = 'none';
   document.getElementById('login-screen').style.display = 'flex';
   document.getElementById('app-screen').style.display = 'none';
 }
-
+ 
 async function showApp() {
   document.getElementById('loading').style.display = 'none';
   document.getElementById('login-screen').style.display = 'none';
@@ -497,27 +483,25 @@ async function showApp() {
   document.getElementById('user-avatar').textContent = name.charAt(0).toUpperCase();
   await loadBikes();
 }
-
+ 
 async function loginWithGoogle() {
   await sb.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.href } });
 }
-
+ 
 async function logout() { await sb.auth.signOut(); }
-
-// ===== 画面切り替えヘルパー =====
+ 
 function hideAllSections() {
   ['bike-list-section','touring-section','touring-live-section','bike-detail-section'].forEach(id => {
     document.getElementById(id).style.display = 'none';
   });
 }
-
-// ===== バイク一覧 =====
+ 
 async function loadBikes() {
   const { data } = await sb.from('bikes').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: true });
   bikesData = data || [];
   sortBikes();
 }
-
+ 
 function sortBikes() {
   const sortType = document.getElementById('bike-sort')?.value || 'date-desc';
   const sorted = [...bikesData];
@@ -532,11 +516,11 @@ function sortBikes() {
   bikesData = sorted;
   renderBikeList();
 }
-
+ 
 function renderBikeList() {
   const list = document.getElementById('bike-list');
   if (bikesData.length === 0) {
-    list.innerHTML = `<div class="no-bike"><div style="font-size:2rem;margin-bottom:0.5rem">🏍️</div><div>バイクがまだ登録されていません</div></div>`;
+    list.innerHTML = '<div class="no-bike"><div style="font-size:2rem;margin-bottom:0.5rem">🏍️</div><div>バイクがまだ登録されていません</div></div>';
     return;
   }
   list.innerHTML = bikesData.map(bike => `
@@ -548,7 +532,7 @@ function renderBikeList() {
       <div style="color:var(--text2);font-size:1.2rem;">›</div>
     </div>`).join('');
 }
-
+ 
 function selectBike(bikeId) {
   selectedBike = bikesData.find(b => b.id === bikeId);
   hideAllSections();
@@ -559,14 +543,14 @@ function selectBike(bikeId) {
   document.getElementById('current-category-label').textContent = 'エンジン系';
   loadRecords();
 }
-
+ 
 function showBikeList() {
   selectedBike = null;
   hideAllSections();
   document.getElementById('bike-list-section').style.display = 'block';
   loadBikes();
 }
-
+ 
 function renderBikeDetail() {
   document.getElementById('bike-detail-card').innerHTML = `
     <div class="bike-card">
@@ -584,7 +568,7 @@ function renderBikeDetail() {
       </div>
     </div>`;
 }
-
+ 
 function openBikeModal(isEdit=false) {
   document.getElementById('bike-modal-title').textContent = isEdit ? 'バイク情報を編集' : 'バイクを追加';
   document.getElementById('bike-delete-btn').style.display = isEdit ? 'block' : 'none';
@@ -599,9 +583,9 @@ function openBikeModal(isEdit=false) {
   }
   document.getElementById('bike-modal').classList.add('open');
 }
-
+ 
 function closeBikeModal() { document.getElementById('bike-modal').classList.remove('open'); }
-
+ 
 async function saveBike() {
   const payload = {
     user_id: currentUser.id,
@@ -622,7 +606,7 @@ async function saveBike() {
     await loadBikes();
   }
 }
-
+ 
 async function deleteBike() {
   if (!confirm(`「${selectedBike.name}」を削除しますか？メンテ記録も全て削除されます。`)) return;
   await sb.from('maintenance_records').delete().eq('bike_id', selectedBike.id);
@@ -630,8 +614,7 @@ async function deleteBike() {
   closeBikeModal();
   showBikeList();
 }
-
-// ===== メンテ記録 =====
+ 
 function switchTab(tab, el) {
   currentTab = tab;
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -639,18 +622,18 @@ function switchTab(tab, el) {
   document.getElementById('current-category-label').textContent = categoryLabels[tab];
   loadRecords();
 }
-
+ 
 async function loadRecords() {
   const { data } = await sb.from('maintenance_records')
     .select('*').eq('user_id', currentUser.id).eq('bike_id', selectedBike.id)
     .eq('category', currentTab).order('date', { ascending: false });
   renderRecords(data||[]);
 }
-
+ 
 function renderRecords(records) {
   const list = document.getElementById('record-list');
   if (records.length===0) {
-    list.innerHTML = `<div class="empty-msg">まだ記録がありません。「＋ 記録追加」から追加してください。</div>`;
+    list.innerHTML = '<div class="empty-msg">まだ記録がありません。「＋ 記録追加」から追加してください。</div>';
     return;
   }
   list.innerHTML = records.map(r => `
@@ -669,21 +652,28 @@ function renderRecords(records) {
       </div>
     </div>`).join('');
 }
-
+ 
 function openAddRecord() {
   document.getElementById('record-category').value = currentTab;
   document.getElementById('record-date').value = new Date().toISOString().split('T')[0];
   ['record-title','record-km','record-next-km','record-memo','record-km-before','record-km-after','record-fuel-amount','record-fuel-memo'].forEach(id => document.getElementById(id).value='');
+ 
+  // 燃費タブのとき走行前距離にバイクの現在kmをセット
+  if (currentTab === 'fuel' && selectedBike && selectedBike.km) {
+    document.getElementById('record-km-before').value = selectedBike.km;
+  }
+ 
+  document.getElementById('fuel-efficiency-display').textContent = '燃費: 未計算';
   toggleFuelFields();
   document.getElementById('record-modal').classList.add('open');
 }
-
+ 
 function toggleFuelFields() {
   const isFuel = document.getElementById('record-category').value==='fuel';
   document.getElementById('fuel-fields').style.display   = isFuel ? 'block' : 'none';
   document.getElementById('normal-fields').style.display = isFuel ? 'none'  : 'block';
 }
-
+ 
 function updateFuelEfficiencyDisplay() {
   const kmBefore   = parseFloat(document.getElementById('record-km-before').value)||0;
   const kmAfter    = parseFloat(document.getElementById('record-km-after').value)||0;
@@ -696,65 +686,78 @@ function updateFuelEfficiencyDisplay() {
     display.textContent = '燃費: 未計算';
   }
 }
-
+ 
 window.addEventListener('DOMContentLoaded', () => {
   ['record-km-before','record-km-after','record-fuel-amount'].forEach(id => {
     document.getElementById(id)?.addEventListener('input', updateFuelEfficiencyDisplay);
   });
 });
-
+ 
 function closeRecordModal() { document.getElementById('record-modal').classList.remove('open'); }
-
+ 
 async function saveRecord() {
   const category = document.getElementById('record-category').value;
-  let memo='', km=null;
-  if (category==='fuel') {
-    const kmBefore=parseFloat(document.getElementById('record-km-before').value);
-    const kmAfter =parseFloat(document.getElementById('record-km-after').value);
-    const fuelAmt =parseFloat(document.getElementById('record-fuel-amount').value);
+  let memo = '', km = null;
+ 
+  if (category === 'fuel') {
+    const kmBefore  = parseFloat(document.getElementById('record-km-before').value);
+    const kmAfter   = parseFloat(document.getElementById('record-km-after').value);
+    const fuelAmt   = parseFloat(document.getElementById('record-fuel-amount').value);
     memo = document.getElementById('record-fuel-memo').value;
-    if (kmBefore&&kmAfter&&fuelAmt) {
-      const dist=kmAfter-kmBefore, eff=(dist/fuelAmt).toFixed(1);
-      const autoMemo=`燃費: ${eff} km/L\n走行距離: ${dist} km\n給油量: ${fuelAmt} L`;
-      memo = memo?`${autoMemo}\n\n${memo}`:autoMemo;
-      km=kmAfter;
+    if (kmBefore && kmAfter && fuelAmt) {
+      const dist = kmAfter - kmBefore;
+      const eff  = (dist / fuelAmt).toFixed(1);
+      const autoMemo = `燃費: ${eff} km/L\n走行距離: ${dist} km\n給油量: ${fuelAmt} L`;
+      memo = memo ? `${autoMemo}\n\n${memo}` : autoMemo;
+      km = kmAfter;
+ 
+      // ★ バイクの総走行距離をSupabaseに更新
       await sb.from('bikes').update({ km: kmAfter }).eq('id', selectedBike.id);
+      // ★ ローカルデータも更新
       selectedBike.km = kmAfter;
       const bikeIdx = bikesData.findIndex(b => b.id === selectedBike.id);
       if (bikeIdx !== -1) bikesData[bikeIdx].km = kmAfter;
     }
   } else {
     memo = document.getElementById('record-memo').value;
-    km   = parseInt(document.getElementById('record-km').value)||null;
+    km   = parseInt(document.getElementById('record-km').value) || null;
   }
+ 
   const payload = {
-    user_id: currentUser.id, bike_id: selectedBike.id, category,
-    title: document.getElementById('record-title').value,
-    date:  document.getElementById('record-date').value,
-    km, next_km: category==='fuel'?null:(parseInt(document.getElementById('record-next-km').value)||null), memo
+    user_id:  currentUser.id,
+    bike_id:  selectedBike.id,
+    category,
+    title:    document.getElementById('record-title').value,
+    date:     document.getElementById('record-date').value,
+    km,
+    next_km:  category === 'fuel' ? null : (parseInt(document.getElementById('record-next-km').value) || null),
+    memo
   };
+ 
   await sb.from('maintenance_records').insert(payload);
   closeRecordModal();
+ 
+  // ★ バイク詳細カードを再描画（走行距離を即反映）
   renderBikeDetail();
-  currentTab=payload.category;
-  document.getElementById('current-category-label').textContent=categoryLabels[currentTab];
-  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===['engine','drive','electric','fuel'].indexOf(currentTab)));
+ 
+  currentTab = payload.category;
+  document.getElementById('current-category-label').textContent = categoryLabels[currentTab];
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', i === ['engine','drive','electric','fuel'].indexOf(currentTab)));
   loadRecords();
 }
-
+ 
 async function deleteRecord(id) {
   if (!confirm('この記録を削除しますか？')) return;
   await sb.from('maintenance_records').delete().eq('id', id);
   loadRecords();
 }
-
-// ===== ツーリング記録一覧 =====
+ 
 function showTouringList() {
   hideAllSections();
   document.getElementById('touring-section').style.display = 'block';
   loadTourings();
 }
-
+ 
 async function loadTourings() {
   const { data } = await sb.from('touring_records')
     .select('*, bikes(name)')
@@ -762,11 +765,11 @@ async function loadTourings() {
     .order('date', { ascending: false });
   renderTourings(data||[]);
 }
-
+ 
 function renderTourings(tourings) {
   const list = document.getElementById('touring-list');
   if (tourings.length===0) {
-    list.innerHTML = `<div class="empty-msg">まだツーリング記録がありません。「＋ ツーリング追加」から追加してください。</div>`;
+    list.innerHTML = '<div class="empty-msg">まだツーリング記録がありません。「＋ ツーリング追加」から追加してください。</div>';
     return;
   }
   list.innerHTML = tourings.map(t => `
@@ -790,7 +793,7 @@ function renderTourings(tourings) {
       </div>
     </div>`).join('');
 }
-
+ 
 function openTouringModal() {
   editingTouringId = null;
   document.getElementById('touring-modal-title').textContent = 'ツーリング記録を追加';
@@ -800,7 +803,7 @@ function openTouringModal() {
   bikeSelect.innerHTML = '<option value="">選択なし</option>' + bikesData.map(b=>`<option value="${b.id}">${b.name}</option>`).join('');
   document.getElementById('touring-modal').classList.add('open');
 }
-
+ 
 async function editTouring(id) {
   const { data: t } = await sb.from('touring_records').select('*').eq('id', id).single();
   if (!t) return;
@@ -817,9 +820,9 @@ async function editTouring(id) {
   document.getElementById('touring-memo').value = t.memo||'';
   document.getElementById('touring-modal').classList.add('open');
 }
-
+ 
 function closeTouringModal() { document.getElementById('touring-modal').classList.remove('open'); }
-
+ 
 async function saveTouring() {
   const bikeId   = document.getElementById('touring-bike').value||null;
   const distance = parseInt(document.getElementById('touring-distance').value)||null;
@@ -846,13 +849,13 @@ async function saveTouring() {
   loadTourings();
   await loadBikes();
 }
-
+ 
 async function deleteTouring(id) {
   if (!confirm('このツーリング記録を削除しますか?')) return;
   await sb.from('touring_records').delete().eq('id', id);
   loadTourings();
 }
-
+ 
 async function shareTouring(id) {
   const { data } = await sb.from('touring_records').select('*, bikes(name)').eq('id', id).single();
   if (!data) return;
@@ -865,8 +868,7 @@ async function shareTouring(id) {
     alert('クリップボードにコピーしました!');
   }
 }
-
-// ===== ツーリング記録の地図表示 =====
+ 
 async function viewTouringMap(id, destination) {
   const { data } = await sb.from('touring_records').select('gps_log').eq('id', id).single();
   if (!data?.gps_log || data.gps_log.length===0) {
@@ -875,8 +877,6 @@ async function viewTouringMap(id, destination) {
   }
   document.getElementById('touring-map-title').textContent = `🗺️ ${destination}`;
   document.getElementById('touring-map-modal').classList.add('open');
-
-  // 地図の初期化（少し遅延させてDOMが確定してから）
   setTimeout(() => {
     if (recordMap) { recordMap.remove(); recordMap=null; }
     const coords = data.gps_log;
@@ -885,10 +885,8 @@ async function viewTouringMap(id, destination) {
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors'
     }).addTo(recordMap);
-    // ルートライン
     const latlngs = coords.map(c=>[c.lat, c.lng]);
     L.polyline(latlngs, { color: '#ff6b00', weight: 4, opacity: 0.8 }).addTo(recordMap);
-    // スタート・ゴールマーカー
     L.circleMarker([coords[0].lat, coords[0].lng], { radius:8, color:'#44ff88', fillColor:'#44ff88', fillOpacity:1 })
       .addTo(recordMap).bindPopup('スタート');
     L.circleMarker([coords[coords.length-1].lat, coords[coords.length-1].lng], { radius:8, color:'#ff4444', fillColor:'#ff4444', fillOpacity:1 })
@@ -896,13 +894,12 @@ async function viewTouringMap(id, destination) {
     recordMap.fitBounds(latlngs);
   }, 200);
 }
-
+ 
 function closeTouringMapModal() {
   document.getElementById('touring-map-modal').classList.remove('open');
   if (recordMap) { recordMap.remove(); recordMap=null; }
 }
-
-// ===== ツーリングライブ（GPSトラッキング + 位置共有） =====
+ 
 async function startTouring() {
   if (!navigator.geolocation) {
     alert('お使いのブラウザは位置情報に対応していません');
@@ -914,11 +911,10 @@ async function startTouring() {
     liveTotalDistance = 0;
     liveLastCoord = null;
     liveStartTime = Date.now();
-
+ 
     hideAllSections();
     document.getElementById('touring-live-section').style.display = 'block';
-
-    // Leaflet地図初期化
+ 
     if (liveMap) { liveMap.remove(); liveMap=null; }
     const lat = position.coords.latitude;
     const lng = position.coords.longitude;
@@ -926,58 +922,47 @@ async function startTouring() {
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors'
     }).addTo(liveMap);
-
-    // 自分のマーカー（オレンジ）
+ 
     liveMyMarker = L.circleMarker([lat, lng], {
       radius: 12, color: '#ff6b00', fillColor: '#ff6b00', fillOpacity: 1,
       weight: 3, opacity: 1
     }).addTo(liveMap).bindPopup('あなた');
-
-    // ルートライン
+ 
     liveRoutePolyline = L.polyline([], { color: '#ff6b00', weight: 4, opacity: 0.7 }).addTo(liveMap);
-
-    // 最初の座標を追加
+ 
     addGpsPoint(lat, lng);
-
-    // 初回位置共有登録
     await updateMyLocationLive(lat, lng);
-
-    // タイマー開始
+ 
     liveTimerInterval = setInterval(updateLiveTimer, 1000);
-
-    // GPSウォッチ（移動検知）
+ 
     liveLocationWatchId = navigator.geolocation.watchPosition(
       async (pos) => {
         const la = pos.coords.latitude, lo = pos.coords.longitude;
         addGpsPoint(la, lo);
-        // マーカー・ルート更新
         liveMyMarker.setLatLng([la, lo]);
         liveRoutePolyline.setLatLngs(liveGpsCoords.map(c=>[c.lat,c.lng]));
         liveMap.panTo([la, lo]);
-        // 距離表示更新
         document.getElementById('live-distance').textContent = liveTotalDistance.toFixed(1);
       },
       (err) => console.warn('GPS:', err),
       { enableHighAccuracy: true, maximumAge: 5000, timeout: 10000 }
     );
-
-    // 3分ごとに位置情報をSupabaseに送信
+ 
     liveLocationUpdateInterval = setInterval(async () => {
       if (liveGpsCoords.length>0) {
         const last = liveGpsCoords[liveGpsCoords.length-1];
         await updateMyLocationLive(last.lat, last.lng);
       }
     }, 3*60*1000);
-
-    // 10秒ごとに仲間の位置を取得
+ 
     liveParticipantsInterval = setInterval(loadLiveParticipants, 10*1000);
     loadLiveParticipants();
-
+ 
   }, (err) => {
     alert('位置情報の取得に失敗しました。設定を確認してください。');
   });
 }
-
+ 
 function addGpsPoint(lat, lng) {
   const coord = { lat, lng, ts: Date.now() };
   if (liveLastCoord) {
@@ -986,8 +971,7 @@ function addGpsPoint(lat, lng) {
   liveGpsCoords.push(coord);
   liveLastCoord = coord;
 }
-
-// ハバーサイン公式で2点間の距離（km）を計算
+ 
 function calcDistance(lat1, lng1, lat2, lng2) {
   const R = 6371;
   const dLat = (lat2-lat1)*Math.PI/180;
@@ -996,7 +980,7 @@ function calcDistance(lat1, lng1, lat2, lng2) {
             Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)*Math.sin(dLng/2);
   return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
 }
-
+ 
 function updateLiveTimer() {
   if (!liveStartTime) return;
   const elapsed = Math.floor((Date.now()-liveStartTime)/1000);
@@ -1007,7 +991,7 @@ function updateLiveTimer() {
     h>0 ? `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`
         : `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
 }
-
+ 
 async function updateMyLocationLive(lat, lng) {
   const userName = currentUser.user_metadata?.full_name || currentUser.email || 'ライダー';
   const today = new Date().toISOString().split('T')[0];
@@ -1017,34 +1001,31 @@ async function updateMyLocationLive(lat, lng) {
     session_date: today, latitude: lat, longitude: lng
   });
 }
-
+ 
 async function loadLiveParticipants() {
   const today = new Date().toISOString().split('T')[0];
   const { data } = await sb.from('location_shares').select('*').eq('session_date', today);
   if (!data || !liveMap) return;
-
+ 
   document.getElementById('live-members').textContent = data.length;
-
-  // 参加者バー更新
+ 
   const pList = document.getElementById('participants-list');
   pList.innerHTML = data.map(p => {
     const isMe = p.user_id===currentUser.id;
     return `<span class="participant-dot ${isMe?'me':'other'}">🏍️ ${p.user_name}</span>`;
   }).join('');
-
-  // 仲間のマーカー更新
+ 
   Object.values(liveMemberMarkers).forEach(m => m.remove());
   liveMemberMarkers = {};
   data.forEach(p => {
-    if (p.user_id===currentUser.id) return; // 自分はスキップ
+    if (p.user_id===currentUser.id) return;
     const marker = L.circleMarker([p.latitude, p.longitude], {
       radius: 10, color: '#44ff88', fillColor: '#44ff88', fillOpacity: 1, weight: 2
     }).addTo(liveMap).bindPopup(`🏍️ ${p.user_name}`);
     liveMemberMarkers[p.user_id] = marker;
   });
 }
-
-// 給油検索（Googleマップへ飛ばす）
+ 
 function searchGasStation() {
   if (liveGpsCoords.length>0) {
     const last = liveGpsCoords[liveGpsCoords.length-1];
@@ -1057,49 +1038,47 @@ function searchGasStation() {
     });
   }
 }
-
+ 
 function confirmStopTouring() {
   document.getElementById('stop-destination').value = '';
   document.getElementById('stop-memo').value = '';
   document.getElementById('stop-touring-modal').classList.add('open');
 }
-
+ 
 async function stopTouringWithSave() {
   document.getElementById('stop-touring-modal').classList.remove('open');
   const destination = document.getElementById('stop-destination').value || 'ツーリング';
   const memo = document.getElementById('stop-memo').value;
-  // Supabaseに保存
   await sb.from('touring_records').insert({
     user_id: currentUser.id,
     date: new Date().toISOString().split('T')[0],
     destination,
     distance: Math.round(liveTotalDistance*10)/10,
     memo,
-    gps_log: liveGpsCoords   // JSONとして保存
+    gps_log: liveGpsCoords
   });
   await cleanupTouring();
   showBikeList();
 }
-
+ 
 async function stopTouringWithoutSave() {
   document.getElementById('stop-touring-modal').classList.remove('open');
   await cleanupTouring();
   showBikeList();
 }
-
+ 
 async function cleanupTouring() {
   isTouring = false;
   if (liveTimerInterval)          { clearInterval(liveTimerInterval); liveTimerInterval=null; }
   if (liveLocationUpdateInterval) { clearInterval(liveLocationUpdateInterval); liveLocationUpdateInterval=null; }
   if (liveParticipantsInterval)   { clearInterval(liveParticipantsInterval); liveParticipantsInterval=null; }
   if (liveLocationWatchId!==null) { navigator.geolocation.clearWatch(liveLocationWatchId); liveLocationWatchId=null; }
-  // 位置共有データを削除
   const today = new Date().toISOString().split('T')[0];
   await sb.from('location_shares').delete().eq('user_id', currentUser.id).eq('session_date', today);
   if (liveMap) { liveMap.remove(); liveMap=null; }
   liveMyMarker=null; liveRoutePolyline=null; liveGpsCoords=[]; liveMemberMarkers={};
 }
-
+ 
 init();
 </script>
 </body>
