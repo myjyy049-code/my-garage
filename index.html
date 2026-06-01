@@ -709,7 +709,12 @@ function closeRecordModal() { document.getElementById('record-modal').classList.
 async function saveRecord() {
   const category = document.getElementById('record-category').value;
   let memo='', km=null;
-  if (kmBefore&&kmAfter&&fuelAmt) {
+  if (category==='fuel') {
+    const kmBefore=parseFloat(document.getElementById('record-km-before').value);
+    const kmAfter =parseFloat(document.getElementById('record-km-after').value);
+    const fuelAmt =parseFloat(document.getElementById('record-fuel-amount').value);
+    memo = document.getElementById('record-fuel-memo').value;
+    if (kmBefore&&kmAfter&&fuelAmt) {
       const dist=kmAfter-kmBefore, eff=(dist/fuelAmt).toFixed(1);
       const autoMemo=`燃費: ${eff} km/L\n走行距離: ${dist} km\n給油量: ${fuelAmt} L`;
       memo = memo?`${autoMemo}\n\n${memo}`:autoMemo;
