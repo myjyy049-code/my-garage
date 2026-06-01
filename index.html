@@ -709,16 +709,15 @@ function closeRecordModal() { document.getElementById('record-modal').classList.
 async function saveRecord() {
   const category = document.getElementById('record-category').value;
   let memo='', km=null;
-  if (category==='fuel') {
-    const kmBefore=parseFloat(document.getElementById('record-km-before').value);
-    const kmAfter =parseFloat(document.getElementById('record-km-after').value);
-    const fuelAmt =parseFloat(document.getElementById('record-fuel-amount').value);
-    memo = document.getElementById('record-fuel-memo').value;
-    if (kmBefore&&kmAfter&&fuelAmt) {
+  if (kmBefore&&kmAfter&&fuelAmt) {
       const dist=kmAfter-kmBefore, eff=(dist/fuelAmt).toFixed(1);
       const autoMemo=`燃費: ${eff} km/L\n走行距離: ${dist} km\n給油量: ${fuelAmt} L`;
       memo = memo?`${autoMemo}\n\n${memo}`:autoMemo;
       km=kmAfter;
+      await sb.from('bikes').update({ km: kmAfter }).eq('id', selectedBike.id);
+      selectedBike.km = kmAfter;
+      const bikeIdx = bikesData.findIndex(b => b.id === selectedBike.id);
+      if (bikeIdx !== -1) bikesData[bikeIdx].km = kmAfter;
     }
   } else {
     memo = document.getElementById('record-memo').value;
@@ -732,6 +731,7 @@ async function saveRecord() {
   };
   await sb.from('maintenance_records').insert(payload);
   closeRecordModal();
+  renderBikeDetail();
   currentTab=payload.category;
   document.getElementById('current-category-label').textContent=categoryLabels[currentTab];
   document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===['engine','drive','electric','fuel'].indexOf(currentTab)));
